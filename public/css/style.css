@@ -1,0 +1,202 @@
+body {
+    font-size: 0.9rem !important;
+}
+
+img {
+    width: 150px;
+    height: 100px;
+}
+
+.carousel img {
+    height: 70vh;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+
+    background-image: none;
+    font-size: 1.5rem;
+
+}
+
+.carousel-indicators li {
+
+    width: 11px;
+    height: 11px;
+    border-radius: 100%;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    height: 60px;
+    z-index: 3 !important;
+}
+
+.nav-item {
+    font-size: 0.7rem;
+}
+
+.social_nav .card{
+    background: none;
+}
+.iconNav
+{
+    color: #fff;
+}
+
+.banner {
+    height: 60vh;
+    background-size: cover;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.banner__block 
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.banner__title
+{
+    color: #fff;
+    font-family: cursive;
+}
+.bdd_ust span {
+    border: 1px solid gray;
+    padding: 3px 6px;
+    background-color: rgb(231, 154, 154);
+    white-space: nowrap;
+    border-radius: 20px;
+    color: black;
+    margin: 1rem;
+}
+
+section article {
+    padding: 2rem 1rem ;
+}
+
+section article img {
+    width: 100%;
+    height: 300px;
+}
+
+section article span {
+    font-weight: bold;
+}
+
+.infos {
+    position: relative;
+    padding: 0 0 1rem;
+}
+
+
+
+.priceRange {
+    color: rgb(90, 238, 90);
+}
+
+.preparationTime {
+    color: #000;
+}
+
+
+.readMore {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%);
+
+}
+
+
+.ingredients .ingredients__list img
+{
+    width: 30px;
+    height: 40px;
+}
+
+.ingredients li{
+    margin-left: -30px;
+    text-transform: lowercase;
+}
+
+.kitchentools img
+{
+    width: 40px;
+    height: 40px;
+}
+
+.kitchentools__list{
+    justify-content: right;
+}
+
+
+li {
+    color: #000;
+    font-size: 1rem;
+    list-style: none;
+}
+
+.infos__img i {
+    font-size: 2.5rem;
+
+}
+.infos__text p{
+    margin-bottom: 0 !important;
+}
+.sidebarRight{
+    position: sticky !important;
+    top: 4rem;
+    height: 100%;
+    border: 1px inset #000;
+    padding: 2rem 1rem;
+}
+
+/* social */
+
+.sharethis-inline-share-buttons
+{
+    text-align: left !important;
+}
+#st-1 .st-btn[data-network="facebook"],
+#st-1 .st-btn[data-network="twitter"],
+#st-1 .st-btn[data-network="pinterest"],
+#st-1 .st-btn[data-network="linkedin"],
+#st-1 .st-btn[data-network="sms"],
+#st-1 .st-btn[data-network="email"],
+#st-1 .st-btn[data-network="sharethis"]
+{
+
+    background-color:transparent !important;
+
+}
+
+#st-1 .st-btn > img {
+    height: 22px !important;
+    width: 21px !important;
+    filter: brightness(21%);
+}
+
+/* Colors */
+.red 
+{
+    color: rgb(228, 15, 15);
+}
+
+.green {
+    color: rgb(22, 189, 22);
+}
+
+.orange{
+    color: rgb(240, 133, 33);
+}
+
+
+footer{
+    padding: 1rem 2rem;
+    background-color: #000;
+}
