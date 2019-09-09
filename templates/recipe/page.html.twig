@@ -14,20 +14,20 @@
 {% endblock %}
 {% block body %}
 
-<div class="infos__description col-lg-9 mr-auto ml-5 mt-5 d-flex justify-content-between">
-    <div class="infos__block d-flex ">
-        <div class="infos__img d-flex align-items-center mr-3">
+<div class="infos__description col-lg-9 mr-auto ml-lg-5 mt-5 d-flex flex-wrap justify-content-between">
+    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap ">
+        <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-tags "></i>
         </div>
-        <div class="infos__text d-flex flex-column justify-content-center">
+        <div class="infos__text d-flex flex-wrap flex-column justify-content-center">
             <h6>Category</h6>
             <p>{% for tag in recipes.tags %}
-                <span> {{ tag.name }} </span>
+                <span class="badge badge-pill badge-dark"> {{ tag.name }} </span>
                 {% endfor %}</p>
         </div>
     </div>
-    <div class="infos__block d-flex">
-        <div class="infos__img d-flex align-items-center mr-3">
+    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap">
+        <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-tachometer-alt {% if recipes.difficultyLevel ==1 %}
                     green
                     {% elseif recipes.difficultyLevel ==2 %}
@@ -37,7 +37,7 @@
                     {% endif %}"></i>
 
         </div>
-        <div class="infos__text d-flex flex-column justify-content-center">
+        <div class="infos__text d-flex flex-wrap flex-column justify-content-center">
             <h6>Difficulty</h6>
             <p>{% if recipes.difficultyLevel ==1 %}
                 Beginner
@@ -48,8 +48,8 @@
                 {% endif %}</p>
         </div>
     </div>
-    <div class="infos__block d-flex">
-        <div class="infos__img d-flex align-items-center mr-3">
+    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap">
+        <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-hand-holding-usd {% if recipes.priceRange ==1 %}
                 green
                 {% elseif recipes.priceRange ==2 %}
@@ -58,23 +58,23 @@
                 red
                 {% endif %}"></i>
         </div>
-        <div class="infos__text d-flex flex-column justify-content-center">
+        <div class="infos__text d-flex flex-wrap flex-column justify-content-center">
             <h6>Price range</h6>
             <p>{% if recipes.priceRange ==1 %}
-                Bon marché
+                Low cost
                 {% elseif recipes.priceRange ==2 %}
-                Coût moyen
+                Medium cost
                 {% elseif  recipes.priceRange ==3 %}
-                Coût élevé
+                High cost
                 {% endif %}</p>
         </div>
     </div>
-    <div class="infos__block d-flex">
-        <div class="infos__img d-flex align-items-center mr-3">
+    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex ">
+        <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="far fa-hourglass"></i>
         </div>
-        <div class="infos__text d-flex flex-column justify-content-center">
-            <h6>Preparation time</h6>
+        <div class="infos__text d-flex flex-wrap flex-column justify-content-center">
+            <h6 class="text-nowrap">Preparation time</h6>
             <p>{% if recipes.preparationTime == 60 %}
                 1h
                 {% elseif recipes.preparationTime > 60 %}
@@ -88,7 +88,7 @@
     </div>
 </div>
 
-<div class="container col-12  mt-5 d-flex">
+<div class="container col-12  mt-5 d-flex flex-wrap">
 
 
     <aside class="col-lg-3">
@@ -97,7 +97,7 @@
             <ul class="ingredients mt-3">
                 {% for ingredient in recipes.ingredients %}
 
-                <li class="d-flex align-items-center ingredients__list mb-4">
+                <li class="d-flex flex-nowrap align-items-center ingredients__list mb-4">
                     <img src="{{ ingredient.picture }}" class="mr-3"
                         alt="">{{ ingredient.quantity }}{% for unit in ingredient.units %}
                     {{ unit.name }}
@@ -112,22 +112,18 @@
         <article class="mb-1 pt-1">
 
             <div class="infos ">
-
+                <h4 class=" mb-2">Description</h4>
                 <p class="mb-4">{{ recipes.description }}</p>
-                <p class="kitchentools">
-                    {% for KitchenTool in recipes.kitchenTools %}
-                    <span class="mr-3">{{ KitchenTool.name }}</span>
-                    {% endfor %}
-                </p>
+                
 
             </div>
 
         </article>
 
-        <article class="">
+        <article >
 
             {% for step in recipes.steps %}
-            <div class="steps">
+            <div class="steps mb-4">
                 <h5>Step {{ step.spot }}</h5>
                 <p>{{ step.description }}</p>
             </div>
@@ -136,38 +132,71 @@
 
 
         </article>
-        <hr class="w-50 ml-auto mr-auto mb-4">
-        <div class="share">
+        <div class="share mb-4">
             <h6>Share this</h6>
             <div class="sharethis-inline-share-buttons"></div>
         </div>
 
         {% if recipes.comments %}
-        <div class="comments mt-4">
+        <div class="comments mt-5 mb-5">
+        
+         {% set countComment = recipes.comments|length %}
+         <h4>{{countComment}}
+         {% if countComment <= 1 %}
+              reply
+         {% elseif countComment > 1 %}
+             replies
+         {% endif %}
+         </h4>
             {% for comment in recipes.comments  %}
-            <div class="comments__block d-flex">
-                <div class="mr-4 mb-3">
-                    {{ comment.picture }}
+            <div class="comments__block d-flex flex-wrap mt-5 mb-4">
+            
+                <div class="mr-4 mb-3 comments__picture">
+                     {{ comment.picture|raw }}
                 </div>
                 <div>
-                    <p>{{ comment.author }}</p>
-                    <p>{{ comment.content }}</p>
+                    <p class="mb-0 text-dark font-weight-bold">{{ comment.author }}</p>
+                    <small class="text-uppercase">{{ comment.createdAt | date('F d , Y') }} AT {{ comment.createdAt | date('g:i A') }} 
+                    </small>
+                    <p class="mt-3 text-dark">{{ comment.content }}</p>
+                     <div class="reply">reply <i class="fas fa-long-arrow-alt-down"></i></div>
                 </div>
+               
             </div>
             {% endfor %}
         </div>
         {% endif %}
 
-        <div class="col-lg-11 mr-auto mt-4">
+        <div class="col-lg-12 mr-auto mt-4">
+            <h5 class="mb-4">Leave a reply</h5>
             {{ form_start(formRecipe) }}
-            {{ form_row(formRecipe) }}
+            <div class=" d-flex flex-wrap justify-content-between">
+                <div class="col-6">{{ form_row(formRecipe.author, {'attr':{'placeholder': "Your name"}}) }}
+            </div>
+                
+                <div class="col-6">{{ form_row(formRecipe.email, {'attr':{'placeholder': "Your email adress"}}) }}
+                   
+                   {% if formRecipe.email is null %}
+                       <small>{{ form_help(formRecipe.email) }}</small>
+            
+                   {% endif %}
+                    </div>
+            <div class="col-12">{{ form_row(formRecipe.content, {'attr':{'placeholder': "Your comment"}}) }}
+            </div>
+
+            <div class="col-12">{{ form_rest(formRecipe) }}</div>
+                
+                {{ form_row(formRecipe.submit, { 'label': 'Post comment' }) }}
+            </div>
+
+            
             {{ form_end(formRecipe) }}
         </div>
 
     </section>
 
-    <aside class="sidebarRight col-lg-3 ml-auto mr-auto mb-5">
-        <h4 class="text-center mb-2">Lorem, ipsum.</h4>
+    <aside class="sidebarRight col-lg-3 ml-auto mr-auto mb-5 text-right">
+        <h4 class=" mb-2">Nutrition Facts</h4>
         <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat, excepturi?</span>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam maiores cumque nostrum dolores culpa expedita
             illum enim distinctio sint id!</p>
@@ -177,7 +206,7 @@
             <ul class="kitchentools mt-3 ">
                 {% for kitchentool in recipes.kitchenTools %}
 
-                <li class="d-flex align-items-center  kitchentools__list mb-4">
+                <li class="d-flex flex-nowrap align-items-center  kitchentools__list mb-4">
                     {{ kitchentool.name }} <img src="{{ kitchentool.picture }}" class="ml-3" alt=""></li>
                 {% endfor %}
             </ul>

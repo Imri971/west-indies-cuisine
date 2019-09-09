@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentsRepository")
@@ -77,16 +79,26 @@ class Comments
         return $this;
     }
 
-    public function getPicture(): ?string
+    public function getPicture()
     {
         return $this->picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture( $picture)
     {
         $this->picture = $picture;
 
         return $this;
+    }
+
+    public function getPictureDir()
+    {
+        return 'picture';
+    }
+
+    public function getWebPath()
+    {
+        return $this->getPictureDir().'/'.$this->getId().'.'.$this->getPicture();
     }
 
     public function getCreatedAt(): ?\DateTimeInterface

@@ -8,3 +8,4 @@ easy_admin:
         - App\Entity\Steps
         - App\Entity\Tag
         - App\Entity\Unit
+        - App\Entity\Comments

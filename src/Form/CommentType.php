@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Form;
-
+use App\Entity\Recipe;
 use App\Entity\Comments;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,9 +21,11 @@ class CommentType extends AbstractType
             ->add('author', TextType::class)
             ->add('email', EmailType::class)
             ->add('content')
-            ->add('picture', FileType::class)
+            // ->add('picture', FileType::class, array(
+            //     'label' => 'Choisissez une photo'
+            // ))
             // ->add('createdAt', DateTime::class)
-            // ->add('recipe')
+            //  ->add('recipe' )
             
             ->add('submit',SubmitType::class);
         ;

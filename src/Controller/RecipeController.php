@@ -96,29 +96,42 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/{id}",  name="recipe_show")
+     * @Route("/recipe/{recipeid}",  name="recipe_show")
+     * @ParamConverter("recipe", options={"mapping": {"recipeid" : "id"}})
+   
      */
-    public function show(Recipe $recipe, Comments $comments = null , Request $request, ObjectManager $manager, $id){
+    public function show(Recipe $recipe, Comments $comments = null , Request $request, ObjectManager $manager, $id = 'recipeid'){
  
         $comments = new Comments();
         $form= $this->createForm(CommentType::class, $comments);    
         $form->handleRequest($request);
-        $repo = $this->getDoctrine()->getRepository(Comments::class);
-        $article = $repo->find($id);
+        $repository = $this->getDoctrine()
+                   ->getManager()
+                   ->getRepository(Recipe::class);
+$idRecipe = $repository->findOneBy(array('id' => $recipe->getId()));;
         if($form->isSubmitted() && $form->isValid()){
               $comments->setCreatedAt(new \DateTime());
-              $comments->setRecipe($article);
+              $comments->setRecipe($idRecipe);
+              $comments->setPicture('<img src="http://lorempixel.com/400/200" alt="">');
+             
+            //  $file = $comments->getPicture();
+            //  $fileName = md5(uniqid()).'.'.$file->guessExtension();
+            //  $file->move($this->getParameter('picture_directory'), $fileName);
+            //  $comments->setPicture($fileName);
               $manager->persist($comments);
               $manager->flush();
 
-              return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
+              return $this->redirectToRoute('recipe_show', ['recipeid' => $recipe->getId()]);
         }
         return $this->render('recipe/page.html.twig', [
             'controller_name' => 'RecipeController',
             'recipes' => $recipe,
-            'formRecipe' => $form->createView()
+            'formRecipe' => $form->createView(),
+            'comments' => $comments
             
         ]);
        
     }
+
+   
 }
