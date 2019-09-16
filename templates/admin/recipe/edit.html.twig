@@ -1,0 +1,24 @@
+{% extends '@EasyAdmin/default/edit.html.twig' %}
+
+
+{% block main %}
+
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, ad? Voluptate natus cum dignissimos rerum.
+    {% block entity_form %}
+        
+    
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-sm-4">
+            {{ form_row(form.title) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            {{ form_row(form.image) }}
+        </div>
+    </div>
+    
+    {{ form_end(form) }}
+    {% endblock %}
+{% endblock %}

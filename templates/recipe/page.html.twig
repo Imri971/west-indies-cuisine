@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Apercu bdd{% endblock %}
+{% block title %}Recette: {{ recipes.title }} {% endblock %}
 
 
 {% block banner %}
@@ -149,10 +149,11 @@
          {% endif %}
          </h4>
             {% for comment in recipes.comments  %}
-            <div class="comments__block d-flex flex-wrap mt-5 mb-4">
+            <div class="comments__block d-flex flex-nowrap mt-5 mb-4">
             
                 <div class="mr-4 mb-3 comments__picture">
-                     {{ comment.picture|raw }}
+                    
+                     <img src="{{ asset('picture/') ~ comment.picture }}" />
                 </div>
                 <div>
                     <p class="mb-0 text-dark font-weight-bold">{{ comment.author }}</p>
@@ -167,31 +168,28 @@
         </div>
         {% endif %}
 
+        {% if app.user %}
         <div class="col-lg-12 mr-auto mt-4">
             <h5 class="mb-4">Leave a reply</h5>
-            {{ form_start(formRecipe) }}
-            <div class=" d-flex flex-wrap justify-content-between">
-                <div class="col-6">{{ form_row(formRecipe.author, {'attr':{'placeholder': "Your name"}}) }}
-            </div>
-                
-                <div class="col-6">{{ form_row(formRecipe.email, {'attr':{'placeholder': "Your email adress"}}) }}
-                   
-                   {% if formRecipe.email is null %}
-                       <small>{{ form_help(formRecipe.email) }}</small>
+            {{ form_start(formRecipe , {'attr': {'class': 'md-form'}}) }}
             
-                   {% endif %}
-                    </div>
-            <div class="col-12">{{ form_row(formRecipe.content, {'attr':{'placeholder': "Your comment"}}) }}
+            <div class="col-12">{{ form_row(formRecipe.content, { 'label': ' Leave your own reply','attr':{'placeholder': "Your reply"}}) }}
             </div>
-
-            <div class="col-12">{{ form_rest(formRecipe) }}</div>
-                
+                <div class="col-12">
                 {{ form_row(formRecipe.submit, { 'label': 'Post comment' }) }}
             </div>
-
             
             {{ form_end(formRecipe) }}
         </div>
+
+        {% else %}
+            
+            <h4 class="text-center"> <i class="far fa-comments"></i> You need to login to leave a reply</h4>
+            <a  href="{{ path('security_login')}}" class="btn btn-primary text-center d-block col-lg-2 ml-auto mr-auto mt-4 ">Login</a>
+        
+        {% endif %}
+        
+
 
     </section>
 
@@ -224,4 +222,5 @@
 <script type="text/javascript"
     src="https://platform-api.sharethis.com/js/sharethis.js#property=5d74240aab6f1000123c82e4&product=inline-share-buttons"
     async="async"></script>
+    
 {% endblock %}

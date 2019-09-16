@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RecipeController!{% endblock %}
+{% block title %}West Indies Food{% endblock %}
 
 {% block carousel %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
@@ -96,7 +96,7 @@
 
         
         </div>
-        <a href="{{ path('recipe_show', {'recipeid': recipe.id }) }}" class="btn btn-outline-primary btn-sm m-auto d-block readMore">
+        <a href="{{ path('recipe_show', {'id': recipe.id }) }}" class="btn btn-outline-primary btn-sm m-auto d-block readMore">
                 Read more
         </a>
         </div>
