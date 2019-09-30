@@ -20,6 +20,7 @@ use App\Repository\CommentsRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\KitchenToolsRepository;
 
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +34,7 @@ class RecipeController extends AbstractController
     /**
      * @Route("/", name="recipe")
      */
-    public function index()
+    public function index(Request $request, PaginatorInterface $paginator )
     {
         $rec = $this->getDoctrine()->getRepository(Recipe::class);
         $cat = $this->getDoctrine()->getRepository(Tag::class);
@@ -51,9 +52,18 @@ class RecipeController extends AbstractController
         $steps = $stp->findAll();
         $units = $uni->findAll();
 
+        // Paginate the results of the query
+        $recettes = $paginator->paginate(
+            // Doctrine Query, not results
+            $recipes,
+            // Define the page parameter
+            $request->query->getInt('page', 1),
+            // Items per page
+            5
+        );
         return $this->render('recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
-            'recipes' => $recipes,
+            'recipes' => $recettes,
             'tags' => $tags,
             'kitchenTools' => $kitchenTools,
             'ingredient' => $ingredients,
