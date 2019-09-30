@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Entity;
-
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\SerializationContext;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,36 +17,43 @@ class Recipe
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"list","show"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=130)
+     * @Serializer\Groups({"list","show"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups({"list","show"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"show"})
      */
     private $preparation_time;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"show"})
      */
     private $price_range;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"show"})
      */
     private $difficulty_level;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"list","show"})
      */
     private $description;
 
@@ -61,21 +70,25 @@ class Recipe
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Steps", mappedBy="recipe")
+     * @Serializer\Groups({"show"})
      */
     private $steps;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="recipes")
+     * @Serializer\Groups({"show"})
      */
     private $tags;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Ingredient", inversedBy="recipes")
+     * @Serializer\Groups({"show"})
      */
     private $ingredients;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\KitchenTools", inversedBy="recipes")
+     * @Serializer\Groups({"show"})
      */
     private $kitchen_tools;
 

@@ -68,13 +68,13 @@
        
              
             {% if not app.user %}
-            <div class="col-lg-1 navUser">
+            <div class="col-lg-2 navUser">
                 <div class="  d-flex justify-content-center text-nowrap ml-auto">
                     <a href="{{ path('security_login')}}" title="login" ><i class="fas fa-lock iconNav"></i> Login</a>
                 </div>
             </div>
             {% else %}
-             <div class="col-lg-2 navUser">
+             <div class="col-lg-3 navUser">
                 <div class="d-flex  justify-content-center ">
                     <div class="badge text-light d-flex align-items-center  mr-4 userProfile"> Hello {{ app.user.username}} <img class="userProfileImg ml-2" src="{{ asset('picture/') ~ app.user.picture }}" /> <span class="userHere"></span></div>
 
@@ -109,7 +109,7 @@
             </li>
         </ul>
     </footer>
-    {% block javascripts %}{% endblock %}
+    {% block javascripts %}{{ encore_entry_script_tags ( 'app' ) }}{% endblock %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
     </script>

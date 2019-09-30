@@ -227,7 +227,16 @@ li {
     width: 21px !important;
     filter: brightness(21%);
 }
-
+.circle{
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    position: fixed;
+    top:5rem;
+    left:3rem;
+    z-index: 6;
+    background-color: red;
+}
 /* Colors */
 .red 
 {
@@ -256,6 +265,13 @@ li {
     right: 1rem;
     bottom: 0;
     color: #000;
+}
+
+.btnLogin 
+{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 footer{

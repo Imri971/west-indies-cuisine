@@ -148,7 +148,7 @@
              replies
          {% endif %}
          </h4>
-            {% for comment in recipes.comments  %}
+    {% for comment in recipes.comments  %}
             <div class="comments__block d-flex flex-nowrap mt-5 mb-4">
             
                 <div class="mr-4 mb-3 comments__picture">
@@ -160,23 +160,29 @@
                     <small class="text-uppercase">{{ comment.createdAt | date('F d , Y') }} AT {{ comment.createdAt | date('g:i A') }} 
                     </small>
                     <p class="mt-3 text-dark">{{ comment.content }}</p>
-                     <div class="reply">reply <i class="fas fa-long-arrow-alt-down"></i></div>
+                    
+                    {% if app.user %}
+                         <div class="reply"><a href="{{ path('comments_edit', {'id': comment.id}) }}" class="badge badge-dark">edit </a> {{ include('comments/_delete_form.html.twig') }} </div>
+                    {% else %}
+                        <div class="reply"></div>
+                    {% endif %}
+                    
                 </div>
-               
             </div>
-            {% endfor %}
+
+    {% endfor %}
         </div>
         {% endif %}
 
         {% if app.user %}
         <div class="col-lg-12 mr-auto mt-4">
-            <h5 class="mb-4">Leave a reply</h5>
+            <h5 class="mb-4">Leave a comment</h5>
             {{ form_start(formRecipe , {'attr': {'class': 'md-form'}}) }}
             
-            <div class="col-12">{{ form_row(formRecipe.content, { 'label': ' Leave your own reply','attr':{'placeholder': "Your reply"}}) }}
+            <div class="col-12">{{ form_row(formRecipe.content, { 'label': ' Leave your own comment','attr':{'placeholder': "Your reply"}}) }}
             </div>
                 <div class="col-12">
-                {{ form_row(formRecipe.submit, { 'label': 'Post comment' }) }}
+              <button type="submit" class="btn btn-primary">Post comment</button>
             </div>
             
             {{ form_end(formRecipe) }}
@@ -184,15 +190,15 @@
 
         {% else %}
             
-            <h4 class="text-center"> <i class="far fa-comments"></i> You need to login to leave a reply</h4>
-            <a  href="{{ path('security_login')}}" class="btn btn-primary text-center d-block col-lg-2 ml-auto mr-auto mt-4 ">Login</a>
+            <h4 class="text-center"> <i class="far fa-comments"></i> You need to login to leave a comment</h4>
+            <a  href="{{ path('security_login')}}" class="btnLogin btn btn-primary text-center w-auto  mt-4 ">Login</a>
         
         {% endif %}
         
 
 
     </section>
-
+        
     <aside class="sidebarRight col-lg-3 ml-auto mr-auto mb-5 text-right">
         <h4 class=" mb-2">Nutrition Facts</h4>
         <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat, excepturi?</span>
@@ -222,5 +228,5 @@
 <script type="text/javascript"
     src="https://platform-api.sharethis.com/js/sharethis.js#property=5d74240aab6f1000123c82e4&product=inline-share-buttons"
     async="async"></script>
-    
+<script src="{{ asset('js/main.js')}}"></script>
 {% endblock %}
