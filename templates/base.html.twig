@@ -1,12 +1,129 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+   
+    {% block stylesheets %} {{ encore_entry_link_tags ( 'app' ) }}{% endblock %}
+</head>
+
+<body>
+
+    {% block carousel %}
+
+    {% endblock %}
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    
+        <a class="navbar-brand" href="/"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt="">West-indies food</a>
+        <div class="social_nav col-lg-1 col-md-2 d-flex mr-4">
+            <div class="card col-lg-4 d-flex justify-content-center">
+
+                <a href="#" target="_blank"><i class="fab fa-facebook-f iconNav"></i></a>
+
+            </div>
+            <div class="card  col-lg-4 d-flex justify-content-center ">
+
+                <a href="#" target="_blank"><i class="fab fa-twitter iconNav"></i> </a>
+
+            </div>
+            <div class="card col-lg-4 d-flex justify-content-center">
+
+                <a href="#" target="_blank"><i class="fab fa-pinterest-p iconNav"></i></a>
+
+            </div>
+
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+            aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{path('security_registration')}}">Registration</a>
+                </li>
+                {# <li class="nav-item">
+                    <a class="nav-link" href="{{path('search')}}">Recherche avancée</a>
+                </li> #}
+
+            </ul>
+            {% block search %}
+                
+            {% endblock %}
+        </div>
+
+        
+           
+
+       
+             
+            {% if not app.user %}
+            <div class="col-lg-1 navUser">
+                <div class="  d-flex justify-content-center text-nowrap ml-auto">
+                    <a href="{{ path('security_login')}}" title="login" ><i class="fas fa-lock iconNav"></i> Login</a>
+                </div>
+            </div>
+            {% else %}
+             <div class="col-lg-3 navUser">
+                <div class="d-flex  justify-content-end ">
+                    <div class="badge text-light d-flex align-items-center  mr-4 userProfile"> Hello {{ app.user.username}} <img class="userProfileImg ml-2" src="{{ asset('picture/') ~ app.user.picture }}" /> <span class="userHere"></span></div>
+
+                    <div class="d-flex justify-content-center align-items-center text-nowrap">
+                    <a href="{{ path('security_logout')}}" title="logout"><i class="fas fa-sign-in-alt iconNav"></i> Logout</a>
+                    </div>
+
+                </div>
+            </div>    
+            {% endif %}
+            
+    
+    </nav>
+    {% block banner %}
+
+    {% endblock %}
+    {% block body %}{% endblock %}
+
+    <footer>
+        <ul class="list-group col-lg-6 col-sm-12">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Cras justo odio
+                <span class="badge badge-primary badge-pill">14</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Dapibus ac facilisis in
+                <span class="badge badge-primary badge-pill">2</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Morbi leo risus
+                <span class="badge badge-primary badge-pill">1</span>
+            </li>
+        </ul>
+    </footer>
+    {% block javascripts %}{{ encore_entry_script_tags ( 'app' ) }}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+
+</body>
+
 </html>

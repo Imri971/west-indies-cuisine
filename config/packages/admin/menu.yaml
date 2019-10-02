@@ -1,0 +1,26 @@
+easy_admin:
+    design:
+        menu:
+            - label: 'West-indies-food'
+              icon : 'utensils'
+              children: 
+                - {entity: 'Recipe', label: 'Recettes'}
+                - {entity: 'Ingredient'}
+                - {entity: 'KitchenTools', icon: 'utensils'}
+                - {entity: 'Reviews'}
+                - {entity: 'Steps'}
+                - {entity: 'Tag'}
+                - {entity: 'Unit'}
+                - {entity: 'Comments'}
+                - {entity: 'User'}
+    entities:
+    # List the entity class name you want to manage
+        
+        - App\Entity\Ingredient
+        - App\Entity\KitchenTools
+        - App\Entity\Reviews
+        - App\Entity\Steps
+        - App\Entity\Tag
+        - App\Entity\Unit
+        - App\Entity\Comments
+        - App\Entity\User
