@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Advanced search{% endblock %}
+
+{% block body %}
+
+{% extends 'base.html.twig' %}
+
 {% block title %}West Indies Food{% endblock %}
 
 {% block carousel %}
@@ -28,42 +34,25 @@
         <span class="carousel-control-next-icon" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
         <span class="sr-only">Next</span>
     </a>
-
-    <div class="banner__carousel text-center text-light d-flex">
-    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block" alt="">
-        <div class="carousel__text d-flex flex-column justify-content-center">
-            <h1 class="carousel__title display-4 text-light text-nowrap"> West-indies Foods</h1>
-            <p class="carousel__text">A very cool website about west-indies foods</p>
-        </div>
-    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block" alt="">
-    </div>
 </div>
 
 {% endblock %}
 
-{% block search %}
-    <div class="col-lg-6 mt-3 d-flex">
-    {{form_start(formSearch)}}
-        {{form_row(formSearch.libelle, { 'label': false,'attr':{'placeholder': "Search a recipe.."}})}}
-    {{form_end(formSearch)}}
-        <a href="{{path('recipe')}}" class="btn btn-secondary h-100"><i class="fas fa-undo"></i></a>
-    </div>
-    
-{% endblock %}
+
 
 {% block body %}
 
 
-<div class="container col-12  mt-5 d-flex flex-wrap">
-    <section class="col-lg-8 col-sm-12" >
+<div class="container col-12  mt-5 d-flex">
+    <section class="col-lg-8" >
 
 
         {% for recipe in recipes %}
-        <article class="mb-4 d-flex flex-wrap ">
-        <div class="col-lg-6 col-sm-12 mr-4">
+        <article class="mb-4 d-flex ">
+        <div class="col-lg-6 mr-4">
         <img src="{{ recipe.image }}" alt="" class="d-block ">
         </div>
-        <div class="infos col-lg-5 mt-3 d-flex flex-wrap align-items-center">
+        <div class="infos col-lg-5 mt-3 d-flex align-items-center">
         <div class="infos__block">
         <h4 class="infos__title mb-3">{{ recipe.title }}</h4>
         <p class="d-flex justify-content-around"><span class="preparationTime">
@@ -112,7 +101,7 @@
                 {% endif %}
             </span>
         </p>
-        <p class="mb-5">{{ recipe.description|truncate(150)}}</p>
+        <p class="mb-4">{{ recipe.description|truncate(150)}}</p>
 
         
         </div>
@@ -131,3 +120,6 @@
     
 </div>
 {% endblock %}
+
+{% endblock %}
+

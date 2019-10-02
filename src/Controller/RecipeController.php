@@ -8,8 +8,10 @@ use App\Entity\Steps;
 use App\Entity\Recipe;
 use App\Entity\Reviews;
 use App\Entity\Comments;
+use App\Entity\Recherche;
 use App\Entity\Ingredient;
 use App\Form\CommentsType;
+use App\Form\RechercheType;
 use App\Entity\KitchenTools;
 use App\Repository\TagRepository;
 use App\Repository\UnitRepository;
@@ -17,9 +19,10 @@ use App\Repository\StepsRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\ReviewsRepository;
 use App\Repository\CommentsRepository;
+
+use App\Repository\RechercheRepository;
 use App\Repository\IngredientRepository;
 use App\Repository\KitchenToolsRepository;
-
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -34,9 +37,24 @@ class RecipeController extends AbstractController
     /**
      * @Route("/", name="recipe")
      */
-    public function index(Request $request, PaginatorInterface $paginator )
+    public function index(RecipeRepository $recipeRepository,RechercheRepository $rechercheRepository, Request $request, PaginatorInterface $paginator )
     {
-        $rec = $this->getDoctrine()->getRepository(Recipe::class);
+        $recherche = new Recherche();
+        $formSearch= $this->createform(RechercheType::class, $recherche);
+        $formSearch->handleRequest($request);
+
+        
+        if ($formSearch->isSubmitted() && $formSearch->isValid()) {
+           $datas = $formSearch->getData();
+            $term = $recherche->getLibelle();
+            $recipes = $recipeRepository->search($term);
+        }
+        else
+        {
+            $recipes = $recipeRepository->findAll();
+        }
+
+
         $cat = $this->getDoctrine()->getRepository(Tag::class);
         $ust = $this->getDoctrine()->getRepository(KitchenTools::class);
         $ing= $this->getDoctrine()->getRepository(Ingredient::class);
@@ -44,13 +62,13 @@ class RecipeController extends AbstractController
         $stp = $this->getDoctrine()->getRepository(Steps::class);
         $uni = $this->getDoctrine()->getRepository(Unit::class);
         
-        $recipes = $rec->findAll();
         $tags = $cat->findAll();
         $kitchenTools = $ust->findAll();
         $ingredients = $ing->findAll();
         $reviews = $rev->findAll();
         $steps = $stp->findAll();
         $units = $uni->findAll();
+        $recherche= $rechercheRepository->findAll();
 
         // Paginate the results of the query
         $recettes = $paginator->paginate(
@@ -59,7 +77,7 @@ class RecipeController extends AbstractController
             // Define the page parameter
             $request->query->getInt('page', 1),
             // Items per page
-            5
+            2
         );
         return $this->render('recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
@@ -69,7 +87,9 @@ class RecipeController extends AbstractController
             'ingredient' => $ingredients,
             'reviews' => $reviews,
             'steps' => $steps,
-            'unit' => $units
+            'unit' => $units,
+            'recherche' => $recherche,
+            'formSearch' => $formSearch->createView()
 
         ]);
     }
