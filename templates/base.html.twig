@@ -19,7 +19,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     
-        <a class="navbar-brand" href="/"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt="">West-indies food</a>
+        <a class="navbar-brand" href="/"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt="">West-indies food<img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></a>
         <div class="social_nav col-lg-1 col-md-2 d-flex mr-4">
             <div class="card col-lg-4 d-flex justify-content-center">
 
@@ -80,7 +80,11 @@
             {% else %}
              <div class="col-lg-3 navUser">
                 <div class="d-flex  justify-content-end ">
-                    <div class="badge text-light d-flex align-items-center  mr-4 userProfile"> Hello {{ app.user.username}} <img class="userProfileImg ml-2" src="{{ asset('picture/') ~ app.user.picture }}" /> <span class="userHere"></span></div>
+                    <div class="badge text-light d-flex align-items-center  mr-4 userProfile"> Hello {{ app.user.username}}  
+                    {% if app.user.picture %} <img class="userProfileImg ml-2" src="{{ asset('picture/') ~ app.user.picture }}" />
+                    {% else %}
+                         <i class="fas fa-user-circle ml-2"></i>
+                    {% endif %}  <span class="userHere"></span></div>
 
                     <div class="d-flex justify-content-center align-items-center text-nowrap">
                     <a href="{{ path('security_logout')}}" title="logout"><i class="fas fa-sign-in-alt iconNav"></i> Logout</a>
@@ -123,6 +127,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
     </script>
+    <script src="{{asset('js/main.js')}}"></script>
 
 </body>
 

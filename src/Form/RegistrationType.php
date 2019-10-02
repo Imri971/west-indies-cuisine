@@ -21,7 +21,8 @@ class RegistrationType extends AbstractType
             ->add('password', PasswordType::class)
             ->add('confirm_password', PasswordType::class)
             ->add('picture', FileType::class, array(
-                'label' => 'Choisissez une photo'
+                'label' => 'Choisissez une photo',
+                'required'   => false
             ))
             ->add('submit', SubmitType::class)
         ;

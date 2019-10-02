@@ -29,6 +29,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -135,7 +136,7 @@ class RecipeController extends AbstractController
 
         $comments = new Comments();
         
-
+        
         $form= $this->createForm(CommentsType::class, $comments);    
         $form->handleRequest($request);
 
@@ -146,6 +147,9 @@ class RecipeController extends AbstractController
         
         $idComment = $repositoryComment->findOneBy(array('id' => $comments->getId()));
         if($form->isSubmitted() && $form->isValid()){
+            // usually you'll want to make sure the user is authenticated first
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
               $comments->setCreatedAt(new \DateTime());
               $comments->setRecipe($idRecipe);
               //$comments->setPicture('<img src="http://lorempixel.com/400/200" alt="">');
@@ -175,16 +179,19 @@ class RecipeController extends AbstractController
 
    /**
      * @Route("/{id}/edit", name="comments_edit", methods={"GET","POST"})
+     * @Security("user.getUsername() == comment.getAuthor()")
      */
     public function edit(Request $request, Comments $comment): Response
     {
+        $idRecipe= $comment->getRecipe();
         $form = $this->createForm(CommentsType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('recipe');
+            
+            return $this->redirectToRoute('recipe_show',['id' => $idRecipe->getId()]);
         }
 
         return $this->render('comments/edit.html.twig', [

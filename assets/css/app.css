@@ -24,7 +24,7 @@ nav .form-control
 }
 nav .icon
 {
-    height: 35px;
+    height: 24px;
     width: auto;
 
 }
@@ -56,6 +56,11 @@ nav .icon
 {
     color: #fff;
     text-decoration: none;
+}
+
+input[type="text"]
+{
+    background: none !important;
 }
 
 .userProfile
@@ -104,10 +109,10 @@ nav .icon
     transform: translate(-50%,-50%);
 }
 
-.banner__title
+.carousel__title
 {
     color: #fff;
-    font-family: cursive;
+    font-family: 'Dancing Script', cursive;
 }
 
 .banner__carousel
@@ -142,10 +147,19 @@ nav .icon
 
 .carousel-indicators li {
 
-    width: 11px;
-    height: 11px;
+    width: 50px;
+    height: 50px;
     border-radius: 100%;
+    text-indent: 0 !important;
+    background: none !important;
 }
+
+.indicators .icon{
+    height: 30px;
+    width: 30px;
+}
+
+
 .bdd_ust span {
     border: 1px solid gray;
     padding: 3px 6px;
@@ -289,13 +303,35 @@ li {
     width: 80px;
     height: 80px;
 }
+.comments__i 
+{
+    font-size: 5rem;
+}
+.userProfile i
+{
+    font-size: 1.5rem;
+}
+
+.menu_reply
+{
+    position: absolute;
+    right: 5px;
+    top: 0;
+    cursor: pointer;
+    display: none; 
+}
 .reply{
     position: absolute;
     right: 1rem;
-    bottom: 0;
+    top: 0;
     color: #000;
+    display: none;
 }
 
+.comments__block:hover .menu_reply
+{
+    display: block;
+}
 .btnLogin 
 {
     position: relative;

@@ -13,4 +13,16 @@
             
         // }
         // btn.addEventListener('click', click)
-  
+        var active = false;
+        $('.menu_reply').on("click", function() {
+                
+                if(active) {
+                        $('.reply').css("display","none");
+                }else{
+                        $('.reply').css("display","block"); 
+                }
+                active= !active;
+               
+                
+            });
+            
