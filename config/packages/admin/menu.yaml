@@ -5,6 +5,8 @@ easy_admin:
               icon : 'utensils'
               children: 
                 - {entity: 'Recipe', label: 'Recettes'}
+                - {entity: 'User'}
+                - {entity: 'RecipeLike'}
                 - {entity: 'Ingredient'}
                 - {entity: 'KitchenTools', icon: 'utensils'}
                 - {entity: 'Reviews'}
@@ -12,7 +14,7 @@ easy_admin:
                 - {entity: 'Tag'}
                 - {entity: 'Unit'}
                 - {entity: 'Comments'}
-                - {entity: 'User'}
+                
     entities:
     # List the entity class name you want to manage
         
@@ -24,3 +26,4 @@ easy_admin:
         - App\Entity\Unit
         - App\Entity\Comments
         - App\Entity\User
+        - App\Entity\RecipeLike

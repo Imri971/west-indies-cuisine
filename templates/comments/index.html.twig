@@ -26,10 +26,13 @@
                 <td>{{ comment.picture }}</td>
                 <td>{{ comment.createdAt ? comment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ comment.email }}</td>
-                <td>
+                {% if is_granted('EDIT', comments) %}
+                    <td>
                     <a href="{{ path('comments_show', {'id': comment.id}) }}">show</a>
                     <a href="{{ path('comments_edit', {'id': comment.id}) }}">edit</a>
                 </td>
+                {% endif %}
+                
             </tr>
         {% else %}
             <tr>

@@ -5,14 +5,20 @@
 {% block body %}
 
 <div class="container col-lg-7 ml-auto mr-auto mt-4 mb-5">
-    <h1>Edit Comments</h1>
+    <h1>Edit your comment {{app.user.username}}</h1>
     
-    
+    {# {% if is_granted('IS_AUTHENTICATED_FULLY') and comment.author ==  app.user.username %} #}
+    {% if app.user and comment.email == app.user.email %}
     {{ include('comments/_form.html.twig', {'button_label': 'Update'}) }}
 <div class="d-flex align-items-end">
-    <a href="{{ path('recipe') }}" class="btn btn-danger mt-2 mr-3">Back to list</a>
+    <a href="{{ path('recipe_show', {'id': comment.recipe.id}) }}#comments" class="btn btn-danger mt-2 mr-3">Back to list</a>
 
     {{ include('comments/_delete_form.html.twig') }}
     </div>
+     {% else %}
+        <p>You can't edit this comment </p>
+    {% endif %}
 </div>
+   
+    
 {% endblock %}

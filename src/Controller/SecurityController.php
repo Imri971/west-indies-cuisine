@@ -27,13 +27,16 @@ class SecurityController extends AbstractController
            
             
             $hash = $encoder->encodePassword($user, $user->getPassword());
+            if ($user->getPicture()) {
             $file = $user->getPicture();
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
             $file->move($this->getParameter('picture_directory'), $fileName);
+            $user->setPicture($fileName);
+            }
+            
              
-
-            $user->setPassword($hash)
-                 ->setPicture($fileName);
+            
+            $user->setPassword($hash);
                  
             $manager->persist($user);
             $manager->flush();

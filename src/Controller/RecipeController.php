@@ -10,18 +10,21 @@ use App\Entity\Reviews;
 use App\Entity\Comments;
 use App\Entity\Recherche;
 use App\Entity\Ingredient;
+use App\Entity\RecipeLike;
 use App\Form\CommentsType;
 use App\Form\RechercheType;
 use App\Entity\KitchenTools;
 use App\Repository\TagRepository;
 use App\Repository\UnitRepository;
+use App\Repository\UserRepository;
 use App\Repository\StepsRepository;
 use App\Repository\RecipeRepository;
+
 use App\Repository\ReviewsRepository;
 use App\Repository\CommentsRepository;
-
 use App\Repository\RechercheRepository;
 use App\Repository\IngredientRepository;
+use App\Repository\RecipeLikeRepository;
 use App\Repository\KitchenToolsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +32,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -37,7 +41,7 @@ class RecipeController extends AbstractController
     /**
      * @Route("/", name="recipe")
      */
-    public function index(RecipeRepository $recipeRepository,RechercheRepository $rechercheRepository, Request $request, PaginatorInterface $paginator )
+    public function index(RecipeRepository $recipeRepository,RechercheRepository $rechercheRepository, Request $request, UserRepository $userRepo, PaginatorInterface $paginator )
     {
         $recherche = new Recherche();
         $formSearch= $this->createform(RechercheType::class, $recherche);
@@ -89,10 +93,52 @@ class RecipeController extends AbstractController
             'steps' => $steps,
             'unit' => $units,
             'recherche' => $recherche,
+            'users' => $userRepo->findAll(),
             'formSearch' => $formSearch->createView()
 
         ]);
     }
+
+    /**
+     * Permet de liker ou unliker un article
+     * @Route("/recipe/{id}/like", name="recipe_like")
+     */
+    public function like(Recipe $recipe, ObjectManager $manager, RecipeLikeRepository $likeRepo): Response
+        {
+            $user= $this->getUser();
+
+            if (!$user) return $this->json([
+                'code' => 403,
+                'error' => "Unauthorized"
+            ], 403);
+
+            if ($recipe->isLikedByUser($user)){
+                $like = $likeRepo->findOneBy([
+                    'recipes' => $recipe,
+                    'user' => $user
+                ]);
+                $manager->remove($like);
+                $manager->flush();
+
+                return $this->json([
+                    'code' =>200,
+                    'message' => 'Like bien supprimé',
+                    'likes' => $likeRepo->count(['recipes' => $recipe]) //Recuperer tous les like appartenant à ce Recipe
+                ],200);
+            }
+
+            $like = new RecipeLike();
+            $like->setRecipes($recipe)
+                 ->setUser($user);
+            $manager->persist($like);
+            $manager->flush();
+            return $this->json([
+                'code' => 200, 
+                'message' => 'Like bien ajouté',
+                'likes' => $likeRepo->count(['recipes' => $recipe])
+            ], 200);
+        }
+
 
     /**
      * @Route("/bdd", name="bdd")
@@ -135,7 +181,7 @@ class RecipeController extends AbstractController
 
         $comments = new Comments();
         
-
+        
         $form= $this->createForm(CommentsType::class, $comments);    
         $form->handleRequest($request);
 
@@ -146,6 +192,9 @@ class RecipeController extends AbstractController
         
         $idComment = $repositoryComment->findOneBy(array('id' => $comments->getId()));
         if($form->isSubmitted() && $form->isValid()){
+            // usually you'll want to make sure the user is authenticated first
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
               $comments->setCreatedAt(new \DateTime());
               $comments->setRecipe($idRecipe);
               //$comments->setPicture('<img src="http://lorempixel.com/400/200" alt="">');
@@ -175,16 +224,19 @@ class RecipeController extends AbstractController
 
    /**
      * @Route("/{id}/edit", name="comments_edit", methods={"GET","POST"})
+     * @Security("user.getUsername() == comment.getAuthor()")
      */
     public function edit(Request $request, Comments $comment): Response
     {
+        $idRecipe= $comment->getRecipe();
         $form = $this->createForm(CommentsType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('recipe');
+            
+            return $this->redirectToRoute('recipe_show',['id' => $idRecipe->getId()]);
         }
 
         return $this->render('comments/edit.html.twig', [

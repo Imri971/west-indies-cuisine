@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Entity;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation as Serializer;
-use JMS\Serializer\SerializationContext;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\SerializationContext;
+use Doctrine\Common\Collections\Collection;
+use JMS\Serializer\Annotation as Serializer;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RecipeRepository")
@@ -97,6 +98,11 @@ class Recipe
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecipeLike", mappedBy="recipes")
+     */
+    private $likes;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -105,6 +111,7 @@ class Recipe
         $this->kitchen_tools = new ArrayCollection();
         $this->steps = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
    
@@ -377,4 +384,49 @@ class Recipe
         return $this;
     }
 
+    
+
+    /**
+     * @return Collection|RecipeLike[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(RecipeLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setRecipes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(RecipeLike $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+            // set the owning side to null (unless already changed)
+            if ($like->getRecipes() === $this) {
+                $like->setRecipes(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Permet de savoir si cet article est liké par un utilisateur
+     * @param User $user
+     * 
+     */
+    public function isLikedByUser( User $user): bool
+    {
+        foreach ($this->likes as $like) {
+            if ($like->getUser() === $user) return true;
+        }
+        return false;
+    }
 }
