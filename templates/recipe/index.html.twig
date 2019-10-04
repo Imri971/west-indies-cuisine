@@ -8,16 +8,25 @@
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active indicators"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="1" class="indicators" ><img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="2" class="indicators"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3" class="indicators" ><img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="4" class="indicators"><img src="{{asset('build/images/palm.svg')}}" class="icon " alt=""></li>
+   
     </ol>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img class="d-block w-100" src="{{asset('build/images/food1.jpg')}}" alt="First slide">
+            <img class="d-block w-100" src="{{asset('build/images/island3.jpg')}}" alt="First slide">
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="{{asset('build/images/food2.jpg')}}" alt="Second slide">
+            <img class="d-block w-100" src="{{asset('build/images/island2.jpg')}}" alt="Second slide">
         </div>
         <div class="carousel-item">
-            <img class="d-block w-100" src="{{asset('build/images/food3.jpg')}}" alt="Third slide">
+            <img class="d-block w-100" src="{{asset('build/images/island1.jpg')}}" alt="Third slide">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="{{asset('build/images/island4.jpg')}}" alt="Four slide">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="{{asset('build/images/island5.jpg')}}" alt="Five slide">
         </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -60,23 +69,50 @@
 
         {% for recipe in recipes %}
         <article class="mb-4 d-flex flex-wrap ">
-        <div class="col-lg-6 col-sm-12 mr-4">
-        <img src="{{ recipe.image }}" alt="" class="d-block ">
-        </div>
-        <div class="infos col-lg-5 mt-3 d-flex flex-wrap align-items-center">
-        <div class="infos__block">
-        <h4 class="infos__title mb-3">{{ recipe.title }}</h4>
-        <p class="d-flex justify-content-around"><span class="preparationTime">
-        <i class="fas fa-stopwatch"></i>
-        {% if recipe.preparationTime == 60 %}
-                       1h
-                    {% elseif recipe.preparationTime > 60 %}
-                        {% set time = recipe.preparationTime - 60 %}
-                        1h {{ time }} min
+            <div class="col-lg-6 col-sm-12 mr-4">
+                <img src="{{ recipe.image }}" alt="" class="d-block ">
+            </div>
+            <div class="infos col-lg-5 mt-3 d-flex flex-wrap align-items-center">
+            <div class="infos__block">
+            <h4 class="infos__title mb-3">{{ recipe.title }}</h4>
 
-                    {% elseif recipe.preparationTime < 60 %}
-                         {{ recipe.preparationTime }}min
-                    {% endif %}
+        <span>
+            <a href="{{path('recipe_like', {'id': recipe.id})}}" class="btn btn-link like js-like">
+                {% if app.user and recipe.isLikedByUser(app.user) %}
+                    <i class="fas fa-heart red"></i>
+                {% else %}
+                    <i class="far fa-heart red"></i>
+                {% endif %}
+                
+                <span class="js-likes">{{recipe.likes | length}}</span>
+                {% set liked = recipe.likes | length %} 
+                <span class="js-label">{% if liked <= 1 %}
+                    like
+                    {% else %}
+                    likes
+                {% endif %} </span>
+
+                <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">
+                  
+                    {% for liker in recipe.likes %}
+                       <small class="ml-2 mr-2 userLike_user">{{liker.user.username}} </small>
+                    {% endfor %}
+                    
+                </span>
+            </a>
+        </span>
+        <p class="d-flex justify-content-around">
+        <span class="preparationTime">
+            <i class="fas fa-stopwatch"></i>
+            {% if recipe.preparationTime == 60 %}
+                1h
+            {% elseif recipe.preparationTime > 60 %}
+                {% set time = recipe.preparationTime - 60 %}
+                1h {{ time }} min
+
+            {% elseif recipe.preparationTime < 60 %}
+                    {{ recipe.preparationTime }}min
+            {% endif %}
             </span>
 
             <span class="difficultyLevel">
@@ -127,7 +163,62 @@
             {{ knp_pagination_render(recipes) }}
         </div>
     </section>
-    <aside class="col-lg-4" ></aside>
+    <aside class="col-lg-3 ml-auto" >
+        <h4 class="text-center mb-4">Favorites</h4>
+            {% for user in users %}
+                {% for like in user.likes %}
+                        {% if app.user and app.user.email == like.user.email %}
+                        
+                             <a href="{{ path('recipe_show', {'id': like.recipes.id }) }}" class="d-flex align-items-center justify-content-end favorites mb-3">
+                                <p class="mt-2"> {{like.recipes.title}}</p>
+                                <img class=" ml-2 b-radius d-block " src="{{like.recipes.image}}" alt="">
+                                </a>
+                                
+                        {% endif %}
+                         
+                {% endfor %} 
+            {% endfor %}
+        
+    </aside>
     
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        function onClickBtnLike(event){
+            event.preventDefault(); //Empêcher l'évènement actuel 
+            const url = this.href;
+            const spanCount = this.querySelector('span.js-likes'); //recupere le span avec la class js-likes dans l'élément actuel
+            const spanLabel = this.querySelector('span.js-label');
+            const icone = this.querySelector('i');
+            axios.get(url).then(function(response){
+                spanCount.textContent = response.data.likes;
+                if (response.data.likes <= 1){
+                    spanLabel.textContent = "like";
+                }else{
+                    spanLabel.textContent = "likes";
+                }
+
+                if(icone.classList.contains('fas')) //Si la class de l'icone contient 'fas'
+                {
+                    icone.classList.replace('fas','far'); //Acceder à toutes les classes d'un élément et remplacer certain items
+                }else 
+                {
+                    icone.classList.replace('far','fas');
+                }
+            }).catch(function(error){
+                if(error.response.status === 403){
+                    window.alert("Vous ne pouvez pas liker si vous n'êtes pas connecté")
+                }
+            });
+        }
+
+
+        document.querySelectorAll('a.js-like').forEach( function(link){
+            link.addEventListener('click', onClickBtnLike);
+        })
+    </script>
 {% endblock %}

@@ -7,6 +7,14 @@ body {
     color: #5c6063;
 }
 
+a:hover 
+{
+    text-decoration: none !important;
+}
+
+.b-radius{
+    border-radius: 100%;
+}
 .custom-file-input {
   
     opacity: 1;
@@ -130,7 +138,7 @@ input[type="text"]
 }
 
 .carousel img {
-    height: 70vh;
+    height: 90vh;
 }
 
 .carousel .icon
@@ -154,13 +162,21 @@ input[type="text"]
     background: none !important;
 }
 
-.indicators .icon{
+.indicators .icon{ 
     height: 30px;
     width: 30px;
 }
 
+.userLike
+{
+    opacity: 0;
+}
+.like:hover .userLike
+{
+    opacity: 1;
+}
 
-.bdd_ust span {
+.bdd_ust span { 
     border: 1px solid gray;
     padding: 3px 6px;
     background-color: rgb(231, 154, 154);
@@ -337,6 +353,12 @@ li {
     position: relative;
     left: 50%;
     transform: translate(-50%);
+}
+
+.favorites img 
+{
+    width: 30px;
+    height: 30px;
 }
 
 footer{

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert; 
@@ -50,7 +52,17 @@ class User implements UserInterface
      */
     private $picture;
 
-    public $imageNew; 
+    public $imageNew;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\RecipeLike", mappedBy="user")
+     */
+    private $likes;
+
+    public function __construct()
+    {
+        $this->likes = new ArrayCollection();
+    } 
     public function getId(): ?int
     {
         return $this->id;
@@ -116,9 +128,40 @@ class User implements UserInterface
         return 'picture';
     }
 
-    // public function __toString()
-    // {
+    /**
+     * @return Collection|RecipeLike[]
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(RecipeLike $like): self
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(RecipeLike $like): self
+    {
+        if ($this->likes->contains($like)) {
+            $this->likes->removeElement($like);
+            // set the owning side to null (unless already changed)
+            if ($like->getUser() === $this) {
+                $like->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
         
-    //     return $this->username;
-    // }
+        return $this->username;
+    }
 }

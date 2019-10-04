@@ -10,18 +10,21 @@ use App\Entity\Reviews;
 use App\Entity\Comments;
 use App\Entity\Recherche;
 use App\Entity\Ingredient;
+use App\Entity\RecipeLike;
 use App\Form\CommentsType;
 use App\Form\RechercheType;
 use App\Entity\KitchenTools;
 use App\Repository\TagRepository;
 use App\Repository\UnitRepository;
+use App\Repository\UserRepository;
 use App\Repository\StepsRepository;
 use App\Repository\RecipeRepository;
+
 use App\Repository\ReviewsRepository;
 use App\Repository\CommentsRepository;
-
 use App\Repository\RechercheRepository;
 use App\Repository\IngredientRepository;
+use App\Repository\RecipeLikeRepository;
 use App\Repository\KitchenToolsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,7 +41,7 @@ class RecipeController extends AbstractController
     /**
      * @Route("/", name="recipe")
      */
-    public function index(RecipeRepository $recipeRepository,RechercheRepository $rechercheRepository, Request $request, PaginatorInterface $paginator )
+    public function index(RecipeRepository $recipeRepository,RechercheRepository $rechercheRepository, Request $request, UserRepository $userRepo, PaginatorInterface $paginator )
     {
         $recherche = new Recherche();
         $formSearch= $this->createform(RechercheType::class, $recherche);
@@ -90,10 +93,52 @@ class RecipeController extends AbstractController
             'steps' => $steps,
             'unit' => $units,
             'recherche' => $recherche,
+            'users' => $userRepo->findAll(),
             'formSearch' => $formSearch->createView()
 
         ]);
     }
+
+    /**
+     * Permet de liker ou unliker un article
+     * @Route("/recipe/{id}/like", name="recipe_like")
+     */
+    public function like(Recipe $recipe, ObjectManager $manager, RecipeLikeRepository $likeRepo): Response
+        {
+            $user= $this->getUser();
+
+            if (!$user) return $this->json([
+                'code' => 403,
+                'error' => "Unauthorized"
+            ], 403);
+
+            if ($recipe->isLikedByUser($user)){
+                $like = $likeRepo->findOneBy([
+                    'recipes' => $recipe,
+                    'user' => $user
+                ]);
+                $manager->remove($like);
+                $manager->flush();
+
+                return $this->json([
+                    'code' =>200,
+                    'message' => 'Like bien supprimé',
+                    'likes' => $likeRepo->count(['recipes' => $recipe]) //Recuperer tous les like appartenant à ce Recipe
+                ],200);
+            }
+
+            $like = new RecipeLike();
+            $like->setRecipes($recipe)
+                 ->setUser($user);
+            $manager->persist($like);
+            $manager->flush();
+            return $this->json([
+                'code' => 200, 
+                'message' => 'Like bien ajouté',
+                'likes' => $likeRepo->count(['recipes' => $recipe])
+            ], 200);
+        }
+
 
     /**
      * @Route("/bdd", name="bdd")
