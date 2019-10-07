@@ -8,7 +8,20 @@
     style="background: linear-gradient(rgba(234, 234, 234, 0.6), rgba(0, 0, 0, 0.6)),url('{{ recipes.image }}'); background-size: cover; background-position: center center; background-attachment :fixed;">
     <div class="banner__block text-center">
         <h1 class="banner__title mb-3 mr-auto ml-auto text-light">How to Make the Best {{ recipes.title }}</h1>
-
+        <p> 
+        <a href="{{path('recipe_like', {'id': recipes.id})}}" class="btn btn-link like js-like ">
+            {% if app.user and recipes.isLikedByUser(app.user) %}
+                <i class="fas fa-heart red"></i>
+            {% else %}
+                <i class="far fa-heart red"></i>
+            {% endif %}
+            
+            <span class="js-likes">{{recipes.likes | length}}</span>
+            {% set liked = recipes.likes | length %} 
+            
+        </a>
+        
+        </p>
     </div>
 </div>
 {% endblock %}
@@ -106,6 +119,17 @@
             </ul>
 
         </div>
+        <div class="kitchentools ">
+            <h4 class="kitchentools__title text-left mt-5">kitchentools</h4>
+            <ul class="kitchentools mt-3 ">
+                {% for kitchentool in recipes.kitchenTools %}
+
+                <li class="d-flex flex-nowrap align-items-center  kitchentools__list mb-4">
+                    <img src="{{ kitchentool.picture }}" class="mr-3" alt="">{{ kitchentool.name }}</li>
+                {% endfor %}
+            </ul>
+
+        </div>
     </aside>
     <section class="col-lg-6 mb-5">
 
@@ -152,12 +176,7 @@
             <div class="comments__block d-flex flex-nowrap mt-5 mb-4">
             
                 <div class="mr-4 mb-3 comments__picture">
-                    {% if comment.picture is empty %}
-                        <i class="fas fa-user-circle comments__i"></i>
-                    {% else %}
-                        <img src="{{ asset('picture/') ~ comment.picture }}" />
-                    {% endif %}
-                     
+                    <img src="{{ asset('picture/') ~ comment.picture }}" />
                 </div>
                 <div>
                     <p class="mb-0 text-dark font-weight-bold">{{ comment.author }}</p>
@@ -207,22 +226,22 @@
     </section>
         
     <aside class="sidebarRight col-lg-3 ml-auto mr-auto mb-5 text-right">
-        <h4 class=" mb-2">Nutrition Facts</h4>
-        <span>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fugiat, excepturi?</span>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam maiores cumque nostrum dolores culpa expedita
+        <h4 class="text-center mb-4 btn-primary p-3">Author</h4>
+            <div class="d-flex align-items-center justify-content-center mb-4"> 
+            <img src="{{ asset('picture/') ~ recipes.user.picture }}" class="mr-2 d-block b-radius author_img" alt="">
+            <h5> {% if app.user and app.user.username == recipes.user.username %}
+                You
+            {% else %}
+                {{recipes.user.username}} {{recipes.user.lastname | truncate(1,false, '.')}}
+            {% endif %}
+           </h5>
+                
+            </div>
+
+        <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam maiores cumque nostrum dolores culpa expedita
             illum enim distinctio sint id!</p>
 
-        <div class="kitchentools ">
-            <h4 class="kitchentools__title text-right mt-5">kitchentools</h4>
-            <ul class="kitchentools mt-3 ">
-                {% for kitchentool in recipes.kitchenTools %}
-
-                <li class="d-flex flex-nowrap align-items-center  kitchentools__list mb-4">
-                    {{ kitchentool.name }} <img src="{{ kitchentool.picture }}" class="ml-3" alt=""></li>
-                {% endfor %}
-            </ul>
-
-        </div>
+        
     </aside>
 
 </div>

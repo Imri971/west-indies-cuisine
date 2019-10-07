@@ -89,6 +89,7 @@
             <th>Ustensiles</th>
             <th>Tags</th>
             <th>Ingrédients</th>
+            <th>Likes</th>
 
         </thead>
         <tbody>
@@ -112,6 +113,9 @@
                 <span>{{ tag.name }}</span>
                 {% endfor %}</td>
             <td> ingredients</td>
+            <td>{% for like in recipe.likes %}
+                {{like.user.username}}
+            {% endfor %} </td>
         </tr>
         {% endfor %}
     </tbody>

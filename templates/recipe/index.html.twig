@@ -63,67 +63,78 @@
 {% block body %}
 
 
-<div class="container col-12  mt-5 d-flex flex-wrap">
-    <section class="col-lg-8 col-sm-12" >
+<div class="container col-11  mt-5 d-flex flex-wrap">
+    <section class="col-lg-8 col-md-12 col-sm-12" >
 
 
         {% for recipe in recipes %}
         <article class="mb-4 d-flex flex-wrap ">
-            <div class="col-lg-6 col-sm-12 mr-4">
+            <div class="col-lg-6 col-md-6 col-sm-12 mr-4">
                 <img src="{{ recipe.image }}" alt="" class="d-block ">
             </div>
-            <div class="infos col-lg-5 mt-3 d-flex flex-wrap align-items-center">
-            <div class="infos__block">
-            <h4 class="infos__title mb-3">{{ recipe.title }}</h4>
 
-        <span>
-            <a href="{{path('recipe_like', {'id': recipe.id})}}" class="btn btn-link like js-like">
-                {% if app.user and recipe.isLikedByUser(app.user) %}
-                    <i class="fas fa-heart red"></i>
-                {% else %}
-                    <i class="far fa-heart red"></i>
-                {% endif %}
-                
-                <span class="js-likes">{{recipe.likes | length}}</span>
-                {% set liked = recipe.likes | length %} 
-                <span class="js-label">{% if liked <= 1 %}
-                    like
-                    {% else %}
-                    likes
-                {% endif %} </span>
+            <div class="infos col-lg-5 col-md-5 col-sm-12 mt-3 d-flex flex-wrap align-items-center">
+                <div class="infos__block">
+                <h4 class="infos__title mb-3">{{ recipe.title }}</h4>
 
-                <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">
-                  
-                    {% for liker in recipe.likes %}
-                       <small class="ml-2 mr-2 userLike_user">{{liker.user.username}} </small>
-                    {% endfor %}
+                <div>
+                     <small class="mr-2 badge badge-pill"> 
+                        {% if recipe.user %}
+                            {{recipe.user.username}} {{recipe.user.lastname | truncate(1,false, '.')}}
+                        {% endif %}
+                        </small>
+                    <a href="#">{% for tag in recipe.tags %}
+                        <small class="badge badge-pill badge-danger">{{tag.name}}</small>
+                    {% endfor %} </a>
+                    <a href="{{path('recipe_like', {'id': recipe.id})}}" class="btn btn-link like js-like">
+                        {% if app.user and recipe.isLikedByUser(app.user) %}
+                            <i class="fas fa-heart red"></i>
+                        {% else %}
+                            <i class="far fa-heart red"></i>
+                        {% endif %}
+                        
+                        <span class="js-likes">{{recipe.likes | length}}</span>
+                        {% set liked = recipe.likes | length %} 
+                        <span class="js-label">{% if liked <= 1 %}
+                            like
+                            {% else %}
+                            likes
+                        {% endif %} </span>
+                       
+
+                        <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">
+                        
+                            {% for liker in recipe.likes %}
+                            <small class="ml-2 mr-2 userLike_user">{{liker.user.username}} </small>
+                            {% endfor %}
+                            
+                        </span>
+                    </a>
                     
-                </span>
-            </a>
-        </span>
+                </div>
         <p class="d-flex justify-content-around">
-        <span class="preparationTime">
-            <i class="fas fa-stopwatch"></i>
-            {% if recipe.preparationTime == 60 %}
-                1h
-            {% elseif recipe.preparationTime > 60 %}
-                {% set time = recipe.preparationTime - 60 %}
-                1h {{ time }} min
+            <span class="preparationTime text-nowrap mr-1">
+                <i class="fas fa-stopwatch"></i>
+                {% if recipe.preparationTime == 60 %}
+                    1h
+                {% elseif recipe.preparationTime > 60 %}
+                    {% set time = recipe.preparationTime - 60 %}
+                    1h {{ time }} min
 
-            {% elseif recipe.preparationTime < 60 %}
-                    {{ recipe.preparationTime }}min
-            {% endif %}
+                {% elseif recipe.preparationTime < 60 %}
+                        {{ recipe.preparationTime }}min
+                {% endif %}
             </span>
 
-            <span class="difficultyLevel">
-            <i class="fas fa-layer-group {% if recipe.difficultyLevel ==1 %}
+            <span class="difficultyLevel text-nowrap mr-1">
+                <i class="fas fa-layer-group {% if recipe.difficultyLevel ==1 %}
                     green
                     {% elseif recipe.difficultyLevel ==2 %}
                     orange
                     {% elseif  recipe.difficultyLevel ==3 %}
                     red
                     {% endif %}"></i>
-            {% if recipe.difficultyLevel ==1 %}
+                    {% if recipe.difficultyLevel ==1 %}
                     Beginner
                     {% elseif recipe.difficultyLevel ==2 %}
                     Intermediary
@@ -131,15 +142,15 @@
                     Experienced
                     {% endif %}
             </span>
-            <span class="priceRange">
-            <i class="fas fa-dollar-sign {% if recipe.priceRange ==1 %}
+            <span class="priceRange text-nowrap">
+                <i class="fas fa-dollar-sign {% if recipe.priceRange ==1 %}
                 green
                 {% elseif recipe.priceRange ==2 %}
                 orange
                 {% elseif  recipe.priceRange ==3 %}
                 red
                 {% endif %}"></i>
-            {% if recipe.priceRange ==1 %}
+                {% if recipe.priceRange ==1 %}
                 Low cost
                 {% elseif recipe.priceRange ==2 %}
                 Medium cost
@@ -148,9 +159,8 @@
                 {% endif %}
             </span>
         </p>
-        <p class="mb-5">{{ recipe.description|truncate(150)}}</p>
+        <p class="mb-5">{{ recipe.description|truncate(120, true)}}</p>
 
-        
         </div>
         <a href="{{ path('recipe_show', {'id': recipe.id }) }}" class="btn btn-outline-primary btn-sm m-auto d-block readMore">
                 Read more
@@ -164,61 +174,32 @@
         </div>
     </section>
     <aside class="col-lg-3 ml-auto" >
-        <h4 class="text-center mb-4">Favorites</h4>
-            {% for user in users %}
-                {% for like in user.likes %}
-                        {% if app.user and app.user.email == like.user.email %}
-                        
-                             <a href="{{ path('recipe_show', {'id': like.recipes.id }) }}" class="d-flex align-items-center justify-content-end favorites mb-3">
-                                <p class="mt-2"> {{like.recipes.title}}</p>
-                                <img class=" ml-2 b-radius d-block " src="{{like.recipes.image}}" alt="">
-                                </a>
-                                
-                        {% endif %}
-                         
-                {% endfor %} 
-            {% endfor %}
+    <h4 class="text-center mb-4 btn-primary p-3">Popular</h4>
+        
+
+        <div>
+            {% if app.user %}
+                <h4 class="text-center mb-4 btn-primary">Favorites</h4>
+                {% for user in users %}
+                    {% for like in user.likes %}
+                            {% if app.user and app.user.email == like.user.email %}
+                            
+                                <a href="{{ path('recipe_show', {'id': like.recipes.id }) }}" class="d-flex align-items-center justify-content-end favorites mb-3">
+                                    <p class="mt-2"> {{like.recipes.title}}</p>
+                                    <img class=" ml-2 b-radius d-block " src="{{like.recipes.image}}" alt="">
+                                    </a>
+                                    
+                            {% endif %}
+                            
+                    {% endfor %} 
+                {% endfor %}
+            {% endif %}
+            
+        </div>
+        
         
     </aside>
     
 </div>
 {% endblock %}
 
-{% block javascripts %}
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-
-        function onClickBtnLike(event){
-            event.preventDefault(); //Empêcher l'évènement actuel 
-            const url = this.href;
-            const spanCount = this.querySelector('span.js-likes'); //recupere le span avec la class js-likes dans l'élément actuel
-            const spanLabel = this.querySelector('span.js-label');
-            const icone = this.querySelector('i');
-            axios.get(url).then(function(response){
-                spanCount.textContent = response.data.likes;
-                if (response.data.likes <= 1){
-                    spanLabel.textContent = "like";
-                }else{
-                    spanLabel.textContent = "likes";
-                }
-
-                if(icone.classList.contains('fas')) //Si la class de l'icone contient 'fas'
-                {
-                    icone.classList.replace('fas','far'); //Acceder à toutes les classes d'un élément et remplacer certain items
-                }else 
-                {
-                    icone.classList.replace('far','fas');
-                }
-            }).catch(function(error){
-                if(error.response.status === 403){
-                    window.alert("Vous ne pouvez pas liker si vous n'êtes pas connecté")
-                }
-            });
-        }
-
-
-        document.querySelectorAll('a.js-like').forEach( function(link){
-            link.addEventListener('click', onClickBtnLike);
-        })
-    </script>
-{% endblock %}

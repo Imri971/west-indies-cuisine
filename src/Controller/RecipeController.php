@@ -8,6 +8,7 @@ use App\Entity\Steps;
 use App\Entity\Recipe;
 use App\Entity\Reviews;
 use App\Entity\Comments;
+use App\Form\RecipeType;
 use App\Entity\Recherche;
 use App\Entity\Ingredient;
 use App\Entity\RecipeLike;
@@ -18,8 +19,8 @@ use App\Repository\TagRepository;
 use App\Repository\UnitRepository;
 use App\Repository\UserRepository;
 use App\Repository\StepsRepository;
-use App\Repository\RecipeRepository;
 
+use App\Repository\RecipeRepository;
 use App\Repository\ReviewsRepository;
 use App\Repository\CommentsRepository;
 use App\Repository\RechercheRepository;
@@ -81,7 +82,7 @@ class RecipeController extends AbstractController
             // Define the page parameter
             $request->query->getInt('page', 1),
             // Items per page
-            2
+            4
         );
         return $this->render('recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
@@ -96,6 +97,32 @@ class RecipeController extends AbstractController
             'users' => $userRepo->findAll(),
             'formSearch' => $formSearch->createView()
 
+        ]);
+    }
+    
+    /**
+     * @Route("/new", name="recipe_new", methods={"GET", "POST"})
+     */
+    public function new(Request $request): Response
+    {
+        $recipe = new Recipe();
+        $user= $this->getUser();
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+
+            if ($user) $recipe->setUser($user);
+            
+            $entityManager->persist($recipe);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('recipe');
+        }
+
+        return $this->render('recipe/new.html.twig', [
+            'recipes' => $recipe,
+            'form' => $form->createView(),
         ]);
     }
 

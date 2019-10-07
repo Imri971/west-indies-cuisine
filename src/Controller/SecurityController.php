@@ -32,6 +32,9 @@ class SecurityController extends AbstractController
             $fileName = md5(uniqid()).'.'.$file->guessExtension();
             $file->move($this->getParameter('picture_directory'), $fileName);
             $user->setPicture($fileName);
+            }else 
+            {
+                $user->setPicture('user.svg');
             }
             
              

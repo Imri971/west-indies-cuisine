@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New recipe{% endblock %}
+
+{% block body %}
+
+    
+    <div class="container col-lg-7 mt-5 mb-5">
+
+        <h1>Create new recipe</h1>
+        {% if app.user %}
+            {{ include('recipe/_form.html.twig') }}
+
+        <a href="{{ path('recipe') }}">back to list</a>
+        {% else %}
+            <h4>You need to login to create a recipe</h4>
+            <blockquote class="blockquote">
+                <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
+                </p>
+                <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite>
+                </footer>
+            </blockquote>
+        {% endif %}
+        
+    </div>
+    
+{% endblock %}

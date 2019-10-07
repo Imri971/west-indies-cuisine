@@ -5,6 +5,7 @@ body {
     font-size: 0.9rem !important;
     font-family: 'Playfair Display', serif;
     color: #5c6063;
+    scroll-behavior: smooth !important;
 }
 
 a:hover 
@@ -237,9 +238,6 @@ section article span {
     height: 40px;
 }
 
-.kitchentools__list{
-    justify-content: right;
-}
 
 
 li {
@@ -355,6 +353,13 @@ li {
     transform: translate(-50%);
 }
 
+/**** Aside ***/
+
+.author_img
+{
+    width: 80px;
+    height: 80px;
+}
 .favorites img 
 {
     width: 30px;

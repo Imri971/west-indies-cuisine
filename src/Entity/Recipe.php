@@ -103,6 +103,11 @@ class Recipe
      */
     private $likes;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="recipes")
+     */
+    private $user;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -428,5 +433,17 @@ class Recipe
             if ($like->getUser() === $user) return true;
         }
         return false;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }
