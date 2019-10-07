@@ -95,11 +95,11 @@
                         
                         <span class="js-likes">{{recipe.likes | length}}</span>
                         {% set liked = recipe.likes | length %} 
-                        <span class="js-label">{% if liked <= 1 %}
+                        {# <span class="js-label">{% if liked <= 1 %}
                             like
                             {% else %}
                             likes
-                        {% endif %} </span>
+                        {% endif %} </span> #}
                        
 
                         <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">

@@ -107,17 +107,43 @@ class RecipeController extends AbstractController
     {
         $recipe = new Recipe();
         $user= $this->getUser();
+
+        
+            // $step = new Steps();
+            // $step->setSpot(1)
+            //      ->setDescription('Paris');
+
+            // $recipe->addStep($step);   
+
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($user) $recipe->setUser($user);
+            if ($user) $recipe->setUser($user); 
+            
+            $steps= $recipe->getSteps();
+            
+            
+
+            foreach ($steps as $step) {
+                $step->setRecipe($recipe);
+            }
             
             $entityManager->persist($recipe);
             $entityManager->flush();
+            // $entityManager->persist($steps);
+            // $entityManager->flush();
+            // pour chaque step de r->steps:
+            //     step->setR(r)
+            // flush
 
-            return $this->redirectToRoute('recipe');
+            // foreach ($step as $key => $value) {
+            //     # code...
+            // }
+            
+
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         return $this->render('recipe/new.html.twig', [

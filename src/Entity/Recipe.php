@@ -70,7 +70,7 @@ class Recipe
     
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Steps", mappedBy="recipe")
+     * @ORM\OneToMany(targetEntity="App\Entity\Steps", mappedBy="recipe",cascade={"persist"})
      * @Serializer\Groups({"show"})
      */
     private $steps;
