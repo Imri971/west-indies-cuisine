@@ -41,7 +41,7 @@ class RecipeType extends AbstractType
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
                 'expanded' => false,
-                'multiple' => false
+                'multiple' => true
             ] )
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,

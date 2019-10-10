@@ -99,6 +99,17 @@ function addRemoveButton($panel) {
                
                 
             });
+            $('.recipe_reply').on("click", function() {
+                
+                if(active) {
+                        $('.reply').css("display","none");
+                }else{
+                        $('.reply').css("display","block"); 
+                }
+                active= !active;
+               
+                
+            });
 
         
         function onClickBtnLike(event){

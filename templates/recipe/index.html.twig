@@ -185,8 +185,9 @@
 
         
             {% if app.user %}
-            <div class="mb-5">
-                <h4 class="text-center mb-4 btn-primary p-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Favorites <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
+            <h4 class="text-center  btn-primary p-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Favorites <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
+                
+            <div class="mb-5 favorites__block">
                 {% for user in users %}
                     {% for like in user.likes %}
                             {% if app.user and app.user.email == like.user.email %}
