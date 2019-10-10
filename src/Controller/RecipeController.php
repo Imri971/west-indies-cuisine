@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -87,6 +88,7 @@ class RecipeController extends AbstractController
         return $this->render('recipe/index.html.twig', [
             'controller_name' => 'RecipeController',
             'recipes' => $recettes,
+            'gallery' => $recipes,
             'tags' => $tags,
             'kitchenTools' => $kitchenTools,
             'ingredient' => $ingredients,
@@ -107,17 +109,43 @@ class RecipeController extends AbstractController
     {
         $recipe = new Recipe();
         $user= $this->getUser();
+
+        
+            // $step = new Steps();
+            // $step->setSpot(1)
+            //      ->setDescription('Paris');
+
+            // $recipe->addStep($step);   
+
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
 
-            if ($user) $recipe->setUser($user);
+            if ($user) $recipe->setUser($user); 
+            $recipe->setCreatedAt(new \DateTime());
+            $steps= $recipe->getSteps();
+            
+            
+
+            foreach ($steps as $step) {
+                $step->setRecipe($recipe);
+            }
             
             $entityManager->persist($recipe);
             $entityManager->flush();
+            // $entityManager->persist($steps);
+            // $entityManager->flush();
+            // pour chaque step de r->steps:
+            //     step->setR(r)
+            // flush
 
-            return $this->redirectToRoute('recipe');
+            // foreach ($step as $key => $value) {
+            //     # code...
+            // }
+            
+
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
         }
 
         return $this->render('recipe/new.html.twig', [
@@ -128,7 +156,7 @@ class RecipeController extends AbstractController
 
     /**
      * Permet de liker ou unliker un article
-     * @Route("/recipe/{id}/like", name="recipe_like")
+     * @Route("/recipe/{id}/like", name="recipe_like", requirements={"id"="\d+"})
      */
     public function like(Recipe $recipe, ObjectManager $manager, RecipeLikeRepository $likeRepo): Response
         {
@@ -165,6 +193,7 @@ class RecipeController extends AbstractController
                 'likes' => $likeRepo->count(['recipes' => $recipe])
             ], 200);
         }
+
 
 
     /**
@@ -249,11 +278,64 @@ class RecipeController extends AbstractController
        
     }
 
+    /**
+     * @Route("/recipe/{id}/edit", name="recipe_edit", methods={"GET","POST"})
+     */
+    public function editRecipe(Request $request, $id): Response
+    {
+
+        $entityManager= $this->getDoctrine()->getManager();
+        $recipe = $this->getDoctrine()->getRepository(Recipe::class)->findOneBy(['id' => $id]);
+        $user= $this->getUser();
+
+        $originalStep = new ArrayCollection();
+
+        foreach ($recipe->getSteps() as $step) {
+            $originalStep->add($step);
+            }
+
+        $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+
+            if ($user) $recipe->setUser($user); 
+            
+             $steps= $recipe->getSteps();
+            
+            foreach ($steps as $step) {
+                $step->setRecipe($recipe);
+             }
+           
+             
+            foreach ($originalStep as $step) {
+                dump($recipe->getSteps()->contains($step));
+               if ($recipe->getSteps()->contains($step) === false) {
+                    
+                    $entityManager->remove($step);
+                } 
+            }
+            
+            $entityManager->persist($recipe);
+            $entityManager->flush();
+
+        return $this->redirectToRoute('recipe_show',['id' => $recipe->getId()]);
+        
+        }
+
+        return $this->render('recipe/edit.html.twig', [
+            'recipe' => $recipe,
+            'form' => $form->createView(),
+        ]);
+    }
+
    /**
-     * @Route("/{id}/edit", name="comments_edit", methods={"GET","POST"})
+     * @Route("/comments/{id}/edit", name="comments_edit", methods={"GET","POST"}, requirements={"id"="\d+"})
      * @Security("user.getUsername() == comment.getAuthor()")
      */
-    public function edit(Request $request, Comments $comment): Response
+    public function editComment(Request $request, Comments $comment): Response
     {
         $idRecipe= $comment->getRecipe();
         $form = $this->createForm(CommentsType::class, $comment);
@@ -272,4 +354,5 @@ class RecipeController extends AbstractController
         ]);
     }
 
+    
 }

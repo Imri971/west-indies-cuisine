@@ -3,9 +3,12 @@
 {% block title %}New Steps{% endblock %}
 
 {% block body %}
-    <h1>Create new Steps</h1>
+    <div class="container col-lg-5 text-dark">
+        <h1>Create new Steps</h1>
 
-    {{ include('steps/_form.html.twig') }}
+        {{ include('steps/_form.html.twig') }}
 
-    <a href="{{ path('steps_index') }}">back to list</a>
+        <a href="{{ path('steps_index') }}">back to list</a>
+    </div>
+    
 {% endblock %}

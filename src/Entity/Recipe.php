@@ -70,7 +70,7 @@ class Recipe
     
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Steps", mappedBy="recipe")
+     * @ORM\OneToMany(targetEntity="App\Entity\Steps", mappedBy="recipe",cascade={"persist"})
      * @Serializer\Groups({"show"})
      */
     private $steps;
@@ -107,6 +107,11 @@ class Recipe
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="recipes")
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $created_At;
 
     public function __construct()
     {
@@ -443,6 +448,18 @@ class Recipe
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_At;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $created_At): self
+    {
+        $this->created_At = $created_At;
 
         return $this;
     }

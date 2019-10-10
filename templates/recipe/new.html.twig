@@ -5,13 +5,13 @@
 {% block body %}
 
     
-    <div class="container col-lg-7 mt-5 mb-5">
-
-        <h1>Create new recipe</h1>
+    <div class="container col-lg-5 mt-5 mb-5">
+        <h1 class="mb-5"w>Create a new recipe  {% if app.user %}
+            {{app.user.username}} 
+        {% endif %} </h1>
         {% if app.user %}
             {{ include('recipe/_form.html.twig') }}
-
-        <a href="{{ path('recipe') }}">back to list</a>
+        <a href="{{ path('recipe') }}" class="btn btn-primary">Back to homepage</a>
         {% else %}
             <h4>You need to login to create a recipe</h4>
             <blockquote class="blockquote">

@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Tag;
+use App\Entity\Steps;
 use App\Entity\Recipe;
+use App\Form\StepsType;
 use App\Entity\Ingredient;
 use App\Entity\KitchenTools;
 use Symfony\Component\Form\AbstractType;
@@ -11,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RecipeType extends AbstractType
 {
@@ -37,8 +40,8 @@ class RecipeType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'expanded' => true,
-                'multiple' => true
+                'expanded' => false,
+                'multiple' => false
             ] )
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
@@ -47,8 +50,17 @@ class RecipeType extends AbstractType
             ] )
             ->add('kitchen_tools', EntityType::class, [
                 'class' => KitchenTools::class,
+                'choice_label' => 'name',
                 'expanded' => true,
                 'multiple' => true
+            ])
+            
+            ->add('steps', CollectionType::class, [
+                'entry_type' => StepsType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' =>true,
+                'label' => false
             ])
         ;
     }
@@ -56,7 +68,7 @@ class RecipeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // 'data_class' => Recipe::class,
+             'data_class' => Recipe::class,
         ]);
     }
 }

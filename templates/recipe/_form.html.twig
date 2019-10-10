@@ -1,4 +1,49 @@
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success mb-2">{{ button_label|default('Save') }}</button>
+    
+    {{ form_row(form.title,{'label': false, 'attr': {'placeholder': 'The title of your recipe'}}) }}
+    {{ form_row(form.image,{'label': false, 'attr': {'placeholder': 'Type an url for your picture'}}) }}
+    {{ form_row(form.description, {'label': false, 'attr': {'placeholder': 'Type a description of your recipe'}}) }}
+    {{ form_row(form.preparation_time) }}
+    {{ form_row(form.price_range) }}
+    {{ form_row(form.difficulty_level) }}
+    {{ form_row(form.tags, {'attr': {'class': 'font-weight-bold'}}) }}
+    {{ form_row(form.ingredients,{'attr': {'class': 'font-weight-bold'}}) }}
+    {{ form_row(form.kitchen_tools, {'attr': {'class': 'font-weight-bold'}}) }}
+    
+    
+    
+    <div id="step-list"
+     data-prototype="{{ form_widget(form.steps.vars.prototype)|e('html_attr') }}"
+     data-widget-counter="{{ form.steps|length }}">
+        <h5 class="mb-3">Add a step</h5>
+
+        
+    {% for row in form.steps %}
+        <div class="panel panel-warning mb-5">
+            
+            <div class="panel-heading mb-4">
+                <strong class="font-weight-bold" >Edit Step {{ row.vars.value.spot}}</strong>
+            </div>
+        
+            <div class="panel-body" >
+                
+                {{ form_widget(row) }}
+            </div>
+        </div>
+            
+    {% endfor %}
+    
+   </div>
+   
+    
+    <button class="btn btn-primary mb-2">{{ button_label|default('Save') }}</button>
+
 {{ form_end(form) }}
+
+
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+{# The script is in js/main.js #}
+{% endblock %}
+

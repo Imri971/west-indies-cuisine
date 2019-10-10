@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20191005202106 extends AbstractMigration
+final class Version20191009210614 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -52,6 +52,13 @@ final class Version20191005202106 extends AbstractMigration
         $this->addSql('INSERT INTO steps (id, recipe_id, spot, description) SELECT id, recipe_id, spot, description FROM __temp__steps');
         $this->addSql('DROP TABLE __temp__steps');
         $this->addSql('CREATE INDEX IDX_34220A7259D8A214 ON steps (recipe_id)');
+        $this->addSql('DROP INDEX IDX_DA88B137A76ED395');
+        $this->addSql('CREATE TEMPORARY TABLE __temp__recipe AS SELECT id, user_id, title, image, preparation_time, price_range, difficulty_level, description FROM recipe');
+        $this->addSql('DROP TABLE recipe');
+        $this->addSql('CREATE TABLE recipe (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER DEFAULT NULL, title VARCHAR(130) NOT NULL COLLATE BINARY, image VARCHAR(255) NOT NULL COLLATE BINARY, preparation_time INTEGER NOT NULL, price_range INTEGER NOT NULL, difficulty_level INTEGER NOT NULL, description CLOB DEFAULT NULL COLLATE BINARY, created_at DATETIME DEFAULT NULL, CONSTRAINT FK_DA88B137A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) NOT DEFERRABLE INITIALLY IMMEDIATE)');
+        $this->addSql('INSERT INTO recipe (id, user_id, title, image, preparation_time, price_range, difficulty_level, description) SELECT id, user_id, title, image, preparation_time, price_range, difficulty_level, description FROM __temp__recipe');
+        $this->addSql('DROP TABLE __temp__recipe');
+        $this->addSql('CREATE INDEX IDX_DA88B137A76ED395 ON recipe (user_id)');
         $this->addSql('DROP INDEX IDX_72DED3CFBAD26311');
         $this->addSql('DROP INDEX IDX_72DED3CF59D8A214');
         $this->addSql('CREATE TEMPORARY TABLE __temp__recipe_tag AS SELECT recipe_id, tag_id FROM recipe_tag');
@@ -111,6 +118,13 @@ final class Version20191005202106 extends AbstractMigration
         $this->addSql('DROP TABLE __temp__ingredient_unit');
         $this->addSql('CREATE INDEX IDX_82EABCC5933FE08C ON ingredient_unit (ingredient_id)');
         $this->addSql('CREATE INDEX IDX_82EABCC5F8BD700D ON ingredient_unit (unit_id)');
+        $this->addSql('DROP INDEX IDX_DA88B137A76ED395');
+        $this->addSql('CREATE TEMPORARY TABLE __temp__recipe AS SELECT id, user_id, title, image, preparation_time, price_range, difficulty_level, description FROM recipe');
+        $this->addSql('DROP TABLE recipe');
+        $this->addSql('CREATE TABLE recipe (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER DEFAULT NULL, title VARCHAR(130) NOT NULL, image VARCHAR(255) NOT NULL, preparation_time INTEGER NOT NULL, price_range INTEGER NOT NULL, difficulty_level INTEGER NOT NULL, description CLOB DEFAULT NULL)');
+        $this->addSql('INSERT INTO recipe (id, user_id, title, image, preparation_time, price_range, difficulty_level, description) SELECT id, user_id, title, image, preparation_time, price_range, difficulty_level, description FROM __temp__recipe');
+        $this->addSql('DROP TABLE __temp__recipe');
+        $this->addSql('CREATE INDEX IDX_DA88B137A76ED395 ON recipe (user_id)');
         $this->addSql('DROP INDEX IDX_22D1FE1359D8A214');
         $this->addSql('DROP INDEX IDX_22D1FE13933FE08C');
         $this->addSql('CREATE TEMPORARY TABLE __temp__recipe_ingredient AS SELECT recipe_id, ingredient_id FROM recipe_ingredient');

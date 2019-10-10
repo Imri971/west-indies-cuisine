@@ -4,31 +4,33 @@
 
 
 {% block banner %}
-<div class="banner"
-    style="background: linear-gradient(rgba(234, 234, 234, 0.6), rgba(0, 0, 0, 0.6)),url('{{ recipes.image }}'); background-size: cover; background-position: center center; background-attachment :fixed;">
-    <div class="banner__block text-center">
-        <h1 class="banner__title mb-3 mr-auto ml-auto text-light">How to Make the Best {{ recipes.title }}</h1>
-        <p> 
-        <a href="{{path('recipe_like', {'id': recipes.id})}}" class="btn btn-link like js-like ">
-            {% if app.user and recipes.isLikedByUser(app.user) %}
-                <i class="fas fa-heart red"></i>
-            {% else %}
-                <i class="far fa-heart red"></i>
-            {% endif %}
-            
-            <span class="js-likes">{{recipes.likes | length}}</span>
-            {% set liked = recipes.likes | length %} 
-            
-        </a>
-        
-        </p>
+<div class="banner d-flex"
+    style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),url('{{ recipes.image }}'); background-size: cover; background-position: center center; background-attachment :fixed;">
+    
+    <div class="banner__block text-center d-flex">
+    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block" alt=""> 
+        <div> 
+            <h1 class="banner__title mb-3 mr-auto ml-auto text-light">How to Make the Best {{ recipes.title }}</h1>
+            <a href="{{path('recipe_like', {'id': recipes.id})}}" class=" btn-link like js-like h4">
+                {% if app.user and recipes.isLikedByUser(app.user) %}
+                    <i class="fas fa-heart red"></i>
+                {% else %}
+                    <i class="far fa-heart red"></i>
+                {% endif %}
+                
+                <span class="js-likes text-light">{{recipes.likes | length}}</span>
+                
+            </a>
+        </div>
+        <img src="{{asset('build/images/palm.svg')}}" class="icon d-block" alt="">
     </div>
 </div>
 {% endblock %}
+{% block navclass %} position-fixed  w-100 navbar-page{% endblock %}
 {% block body %}
 
-<div class="infos__description col-lg-9 mr-auto ml-lg-5 mt-5 d-flex flex-wrap justify-content-between">
-    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap ">
+<div class="infos__description col-lg-9 mr-auto ml-lg-auto ml-md-auto mt-5 d-flex flex-wrap justify-content-between">
+    <div class="infos__block mb-4 col-lg-3 col-md-5 col-sm-12 d-flex flex-wrap ">
         <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-tags "></i>
         </div>
@@ -39,7 +41,7 @@
                 {% endfor %}</p>
         </div>
     </div>
-    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap">
+    <div class="infos__block mb-4 col-lg-3 col-md-5 col-sm-12 d-flex flex-wrap">
         <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-tachometer-alt {% if recipes.difficultyLevel ==1 %}
                     green
@@ -61,7 +63,7 @@
                 {% endif %}</p>
         </div>
     </div>
-    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex flex-wrap">
+    <div class="infos__block mb-4 col-lg-3 col-md-5 col-sm-12 d-flex flex-wrap">
         <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="fas fa-hand-holding-usd {% if recipes.priceRange ==1 %}
                 green
@@ -82,7 +84,7 @@
                 {% endif %}</p>
         </div>
     </div>
-    <div class="infos__block mb-4 col-lg-3 col-md-3 col-sm-12 d-flex ">
+    <div class="infos__block mb-4 col-lg-3 col-md-5 col-sm-12 d-flex ">
         <div class="infos__img d-flex flex-wrap align-items-center mr-3">
             <i class="far fa-hourglass"></i>
         </div>
@@ -104,28 +106,33 @@
 <div class="container col-12  mt-5 d-flex flex-wrap">
 
 
-    <aside class="col-lg-3">
+    <aside class="col-lg-3 asideIngKit">
         <div class="ingredient">
-            <h3 class="ingredient__title text-center">Ingredient</h3>
+            <h4 class=" text-center mb-4 btn-primary p-2  mb-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Ingredients <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
             <ul class="ingredients mt-3">
                 {% for ingredient in recipes.ingredients %}
 
-                <li class="d-flex flex-nowrap align-items-center ingredients__list mb-4">
-                    <img src="{{ ingredient.picture }}" class="mr-3"
-                        alt="">{{ ingredient.quantity }}{% for unit in ingredient.units %}
+                <li class="d-flex flex-nowrap align-items-center ingredients__list mb-3">
+                    {# <img src="{{ ingredient.picture }}" class="mr-3"
+                        alt=""> #}
+                        <i class="fas fa-stream mr-3"></i>
+                        {{ ingredient.quantity }}{% for unit in ingredient.units %}
                     {{ unit.name }}
                     {% endfor %} {{ ingredient.name }}</li>
                 {% endfor %}
             </ul>
 
         </div>
-        <div class="kitchentools ">
-            <h4 class="kitchentools__title text-left mt-5">kitchentools</h4>
+        <div class="kitchentool ">
+            <h4 class="text-center mb-4 btn-primary p-2 text-left mt-lg-5 mb-2 d-flex"><img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> kitchentools <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
+            
             <ul class="kitchentools mt-3 ">
                 {% for kitchentool in recipes.kitchenTools %}
 
-                <li class="d-flex flex-nowrap align-items-center  kitchentools__list mb-4">
-                    <img src="{{ kitchentool.picture }}" class="mr-3" alt="">{{ kitchentool.name }}</li>
+                <li class="d-flex flex-nowrap align-items-center  kitchentools__list mb-3">
+                    {# <img src="{{ kitchentool.picture }}" class="mr-3" alt="">  #}
+                    <i class="fas fa-list mr-3 "></i>
+                    {{ kitchentool.name }}</li>
                 {% endfor %}
             </ul>
 
@@ -144,7 +151,7 @@
 
         </article>
 
-        <article >
+        <article class="mb-4" >
 
             {% for step in recipes.steps %}
             <div class="steps mb-4">
@@ -152,11 +159,8 @@
                 <p>{{ step.description }}</p>
             </div>
             {% endfor %}
-
-
-
         </article>
-        <div class="share mb-4">
+        <div class="share mb-4 mt-5">
             <h6>Share this</h6>
             <div class="sharethis-inline-share-buttons"></div>
         </div>
@@ -226,19 +230,30 @@
     </section>
         
     <aside class="sidebarRight col-lg-3 ml-auto mr-auto mb-5 text-right">
-        <h4 class="text-center mb-4 btn-primary p-3">Author</h4>
+        <h4 class="text-center mb-4 btn-primary p-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Author <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
             <div class="d-flex align-items-center justify-content-center mb-4"> 
             <img src="{{ asset('picture/') ~ recipes.user.picture }}" class="mr-2 d-block b-radius author_img" alt="">
-            <h5> {% if app.user and app.user.username == recipes.user.username %}
+            <div class="d-flex flex-column align-items-center"> 
+            <h5>
+            {% if app.user and app.user.username == recipes.user.username %}
                 You
             {% else %}
                 {{recipes.user.username}} {{recipes.user.lastname | truncate(1,false, '.')}}
             {% endif %}
-           </h5>
+            </h5> 
+            <p class="text-center badge badge-pill badge-primary ">
+            {% if recipes.user.recipes|length == 1 %}
+                 {{recipes.user.recipes|length }} recipe
+            {% else %}
+                {{recipes.user.recipes|length }} recipes
+            {% endif %}
+
+            </p>
+           </div>
                 
             </div>
-
-        <p class="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam maiores cumque nostrum dolores culpa expedita
+            <small class="text-center d-block mb-3">{{ recipes.createdAt | date('F d , Y') }} AT {{ recipes.createdAt | date('g:i A') }}</small>
+        <p class="text-center mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam maiores cumque nostrum dolores culpa expedita
             illum enim distinctio sint id!</p>
 
         
@@ -254,5 +269,4 @@
 <script type="text/javascript"
     src="https://platform-api.sharethis.com/js/sharethis.js#property=5d74240aab6f1000123c82e4&product=inline-share-buttons"
     async="async"></script>
-<script src="{{ asset('js/main.js')}}"></script>
 {% endblock %}
