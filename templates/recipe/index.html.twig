@@ -44,7 +44,7 @@
             <h1 class="carousel__title display-4 text-light text-nowrap font-weight-bold"> West-indies Foods</h1>
             <p class="carousel__text">A very cool website about west-indies foods make with love</p>
         </div>
-    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block" alt="">
+    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block transform-translateZ" alt="">
     </div>
 </div>
 
@@ -68,9 +68,15 @@
 
 
         {% for recipe in recipes %}
-        <article class="mb-4 d-flex flex-wrap ">
-            <div class="col-lg-6 col-md-6 col-sm-12 mr-4">
-                <img src="{{ recipe.image }}" alt="" class="d-block ">
+        <article class="article mb-lg-4 mb-md-5 d-flex flex-wrap p-0 ">
+            <div class="col-lg-6 col-md-6 col-sm-12 mr-lg-4 mr-md-4 recipePicture">
+                <img src="{{ recipe.image }}" alt="" class="d-block recipePicture__img ">
+                <div class="recipeIndexBanner d-flex align-items-center">
+                    <a href="{{ path('recipe_show', {'id': recipe.id }) }}" class="btn m-auto d-flex text-nowrap imageRecipe">
+                    <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini mr-1" alt=""> {{ recipe.title }} <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ ml-1" alt="">
+                    </a>
+                </div>
+                
             </div>
 
             <div class="infos col-lg-5 col-md-5 col-sm-12 mt-3 d-flex flex-wrap align-items-center">
@@ -94,7 +100,7 @@
                         {% endif %}
                         
                         <span class="js-likes">{{recipe.likes | length}}</span>
-                        {% set liked = recipe.likes | length %} 
+                       {# {% set liked = recipe.likes | length %} 
                         {# <span class="js-label">{% if liked <= 1 %}
                             like
                             {% else %}
@@ -102,18 +108,19 @@
                         {% endif %} </span> #}
                        
 
-                        <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">
+                        {# <span class="userLike bg-primary text-light d-flex flex-column align-items-center position-absolute mr-auto ml-auto">
                         
                             {% for liker in recipe.likes %}
                             <small class="ml-2 mr-2 userLike_user">{{liker.user.username}} </small>
                             {% endfor %}
                             
-                        </span>
+                        </span> #}
                     </a>
+
                     
                 </div>
         <p class="d-flex justify-content-around">
-            <span class="preparationTime text-nowrap mr-1">
+            <span class="preparationTime text-nowrap mr-2">
                 <i class="fas fa-stopwatch"></i>
                 {% if recipe.preparationTime == 60 %}
                     1h
@@ -126,7 +133,7 @@
                 {% endif %}
             </span>
 
-            <span class="difficultyLevel text-nowrap mr-1">
+            <span class="difficultyLevel text-nowrap mr-2">
                 <i class="fas fa-layer-group {% if recipe.difficultyLevel ==1 %}
                     green
                     {% elseif recipe.difficultyLevel ==2 %}
@@ -169,17 +176,17 @@
         </article>
         {% endfor %}
         
-            <div class="navigation mt-3">
+            <div class="navigation mt-3 mb-md-5 d-flex justify-content-center">
             {{ knp_pagination_render(recipes) }}
         </div>
     </section>
-    <aside class="col-lg-3 ml-auto" >
-    <h4 class="text-center mb-4 btn-primary p-3">Popular</h4>
-        
+    <aside class="col-lg-3 ml-auto mb-3" >
+    {# <h4 class="text-center mb-4 btn-primary p-2">Popular</h4> #}
 
-        <div>
+        
             {% if app.user %}
-                <h4 class="text-center mb-4 btn-primary">Favorites</h4>
+            <div class="mb-5">
+                <h4 class="text-center mb-4 btn-primary p-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Favorites <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h4>
                 {% for user in users %}
                     {% for like in user.likes %}
                             {% if app.user and app.user.email == like.user.email %}
@@ -193,9 +200,25 @@
                             
                     {% endfor %} 
                 {% endfor %}
+            </div>
             {% endif %}
             
-        </div>
+        
+    <div class="gallery-section mb-5">
+      <h5 class="text-center mb-4 btn-primary p-2 d-flex"> <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini " alt=""> Gallery <img src="{{asset('build/images/palm.svg')}}" class="icon d-block palm-mini transform-translateZ" alt=""></h5> 
+      <div class="border"></div>
+      <div class="gallery  container d-flex flex-wrap justify-content-between">
+            {% for recipe in gallery %}
+            <div class="image col-lg-3 col-md-3 col-sm-5">
+            <a href="{{recipe.image}}"  >
+                <img src="{{recipe.image}}" alt="" class="w-100">
+            </a>
+            </div>
+            {% endfor %}
+       </div>
+    </div>
+  
+
         
         
     </aside>

@@ -108,6 +108,11 @@ class Recipe
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $created_At;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -443,6 +448,18 @@ class Recipe
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_At;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $created_At): self
+    {
+        $this->created_At = $created_At;
 
         return $this;
     }

@@ -1,63 +1,49 @@
+
 {{ form_start(form) }}
-    {# {{ form_widget(form) }}
-    {{ form_widget(form) }} #}
     
-    {# store the prototype on the data-prototype attribute #}
-    {# <div class="col-sm-8 col-sm-offset-2" id="exp_list" data-prototype="{{ form_widget(form.exps.vars.prototype)|e('html_attr')}} "> #}
+    {{ form_row(form.title,{'label': false, 'attr': {'placeholder': 'The title of your recipe'}}) }}
+    {{ form_row(form.image,{'label': false, 'attr': {'placeholder': 'Type an url for your picture'}}) }}
+    {{ form_row(form.description, {'label': false, 'attr': {'placeholder': 'Type a description of your recipe'}}) }}
+    {{ form_row(form.preparation_time) }}
+    {{ form_row(form.price_range) }}
+    {{ form_row(form.difficulty_level) }}
+    {{ form_row(form.tags, {'attr': {'class': 'font-weight-bold'}}) }}
+    {{ form_row(form.ingredients,{'attr': {'class': 'font-weight-bold'}}) }}
+    {{ form_row(form.kitchen_tools, {'attr': {'class': 'font-weight-bold'}}) }}
     
-    <ul id="step-fields-list" data-prototype="{{ form_widget(form.steps.vars.prototype)|e }}"
-        data-widget-tags="{{ '<div></div>'|e }}"
-        data-widget-counter="{{ form.steps|length }}">
-    {% for stepField in form.steps %}
-        <li>
-            {{ form_errors(stepField) }}
-            {{ form_widget(stepField) }}
-        </li>
+    
+    
+    <div id="step-list"
+     data-prototype="{{ form_widget(form.steps.vars.prototype)|e('html_attr') }}"
+     data-widget-counter="{{ form.steps|length }}">
+        <h5 class="mb-3">Add a step</h5>
+
+        
+    {% for row in form.steps %}
+        <div class="panel panel-warning mb-5">
+            
+            <div class="panel-heading mb-4">
+                <strong class="font-weight-bold" >Edit Step {{ row.vars.value.spot}}</strong>
+            </div>
+        
+            <div class="panel-body" >
+                
+                {{ form_widget(row) }}
+            </div>
+        </div>
+            
     {% endfor %}
-   </ul>
     
-
-    <button type="button"
-        class="add-another-collection-widget"
-        data-list-selector="#step-fields-list">Add another step</button>
-
-    {# ... #}
-    <button class="btn btn-success mb-2">{{ button_label|default('Save') }}</button>
+   </div>
+   
+    
+    <button class="btn btn-primary mb-2">{{ button_label|default('Save') }}</button>
 
 {{ form_end(form) }}
 
 
 {% block javascripts %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-        $('.add-another-collection-widget').click(function (e) {
-
-            console.log($(this).attr('data-list-selector'));
-            var list = $($(this).attr('data-list-selector'));
-            // Try to find the counter of the list or use the length of the list
-            console.log(list+" list");
-            var counter = list.data('widget-counter') || list.children().length;
-            console.log("counter "+counter);
-            // grab the prototype template
-            var newWidget = list.attr('data-prototype');
-            console.log(newWidget+" prototype")
-            console.log(list.data)
-            // replace the "__name__" used in the id and name of the prototype
-            // with a number that's unique to your emails
-            // end name attribute looks like name="contact[emails][2]"
-            newWidget = newWidget.replace(/__name__/g, counter);
-            // Increase the counter
-            counter++;
-            // And store it, the length cannot be used if deleting widgets is allowed
-            list.data('widget-counter', counter);
-    
-            // create a new list element and add it to the list
-            var newElem = $(list.attr('data-widget-tags')).html(newWidget);
-            newElem.appendTo(list);
-        });
-    });
-    
-    </script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+{# The script is in js/main.js #}
 {% endblock %}
 

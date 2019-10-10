@@ -40,8 +40,8 @@ class RecipeType extends AbstractType
             ])
             ->add('tags', EntityType::class, [
                 'class' => Tag::class,
-                'expanded' => true,
-                'multiple' => true
+                'expanded' => false,
+                'multiple' => false
             ] )
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredient::class,
@@ -59,7 +59,8 @@ class RecipeType extends AbstractType
                 'entry_type' => StepsType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
-                'prototype' =>true
+                'prototype' =>true,
+                'label' => false
             ])
         ;
     }
