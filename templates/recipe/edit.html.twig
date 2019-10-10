@@ -4,12 +4,16 @@
 
 {% block body %}
 
-    <div class="container col-lg-5">
+    <div class="container col-lg-5 mt-4">
         <h1>Edit recipe</h1>
 
+        {% if app.user and app.user.username == recipe.user.username %}
         {{ include('recipe/_form.html.twig', {'button_label': 'Update'}) }}
-
-        <a href="{{ path('recipe') }}">back to list</a>
+        {% else %}
+            <h3 class="mt-5 mb-5">You can't edit this comment.</h3>
+        {% endif %}
+        
+        <a href="{{ path('recipe') }}" class="btn btn-outline-primary mb-5">back to list</a>
 
         {# {{ include('/_delete_form.html.twig') }} #}
     </div>

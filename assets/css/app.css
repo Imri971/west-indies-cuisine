@@ -6,6 +6,7 @@ body {
     font-family: 'Playfair Display', serif;
     color: #5c6063;
     scroll-behavior: smooth !important;
+    background-color: #fff;
 }
 
 a:hover 
@@ -368,7 +369,8 @@ li {
     color: rgb(240, 133, 33);
 }
 
-.comments__block{
+.comments__block,
+.infos__description{
     position: relative;
 }
 .comments__picture img
@@ -386,7 +388,7 @@ li {
     font-size: 1.5rem;
 }
 
-.menu_reply
+.menu_reply, .recipe_reply
 {
     position: absolute;
     right: 5px;
@@ -403,6 +405,11 @@ li {
 }
 
 .comments__block:hover .menu_reply
+{
+    display: block;
+}
+
+.infos__description:hover .recipe_reply
 {
     display: block;
 }
@@ -431,6 +438,19 @@ li {
 
 /**** Aside ***/
 
+.asideIngKit
+    {
+        position: sticky ;
+        top: 5rem;
+        height: 100%;
+    }
+
+.ingredients, .kitchentools
+ {
+    max-height: 200px;
+    overflow: auto;
+ }
+
 .author_img
 {
     width: 80px;
@@ -440,6 +460,12 @@ li {
 {
     width: 30px;
     height: 30px;
+}
+
+.favorites__block
+{
+    max-height: 310px;
+    overflow:auto;
 }
 
 footer{
@@ -549,6 +575,8 @@ footer{
     {
         display: flex;
         justify-content: space-around;
+        position: relative;
+        top: 0;
     }
     .kitchentools, .ingredients, #recipe_ingredients
     {

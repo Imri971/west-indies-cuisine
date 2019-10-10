@@ -155,6 +155,39 @@ class RecipeController extends AbstractController
     }
 
     /**
+     * @Route("/bdd", name="bdd")
+     */
+    public function bdd()
+    {
+        $rec = $this->getDoctrine()->getRepository(Recipe::class);
+        $cat = $this->getDoctrine()->getRepository(Tag::class);
+        $ust = $this->getDoctrine()->getRepository(KitchenTools::class);
+        $ing= $this->getDoctrine()->getRepository(Ingredient::class);
+        $rev = $this->getDoctrine()->getRepository(Reviews::class);
+        $stp = $this->getDoctrine()->getRepository(Steps::class);
+        $uni = $this->getDoctrine()->getRepository(Unit::class);
+        
+        $recipes = $rec->findAll();
+        $tags = $cat->findAll();
+        $kitchenTools = $ust->findAll();
+        $ingredients = $ing->findAll();
+        $reviews = $rev->findAll();
+        $steps = $stp->findAll();
+        $units = $uni->findAll();
+        
+        return $this->render('recipe/bdd.html.twig', [
+            'controller_name' => 'RecipeController',
+            'recipes' => $recipes,
+            'tags' => $tags,
+            'kitchenTools' => $kitchenTools,
+            'ingredient' => $ingredients,
+            'reviews' => $reviews,
+            'steps' => $steps,
+            'unit' => $units
+        ]);
+    }
+
+    /**
      * Permet de liker ou unliker un article
      * @Route("/recipe/{id}/like", name="recipe_like", requirements={"id"="\d+"})
      */
@@ -194,49 +227,15 @@ class RecipeController extends AbstractController
             ], 200);
         }
 
-
-
-    /**
-     * @Route("/bdd", name="bdd")
-     */
-    public function bdd()
-    {
-        $rec = $this->getDoctrine()->getRepository(Recipe::class);
-        $cat = $this->getDoctrine()->getRepository(Tag::class);
-        $ust = $this->getDoctrine()->getRepository(KitchenTools::class);
-        $ing= $this->getDoctrine()->getRepository(Ingredient::class);
-        $rev = $this->getDoctrine()->getRepository(Reviews::class);
-        $stp = $this->getDoctrine()->getRepository(Steps::class);
-        $uni = $this->getDoctrine()->getRepository(Unit::class);
-        
-        $recipes = $rec->findAll();
-        $tags = $cat->findAll();
-        $kitchenTools = $ust->findAll();
-        $ingredients = $ing->findAll();
-        $reviews = $rev->findAll();
-        $steps = $stp->findAll();
-        $units = $uni->findAll();
-        
-        return $this->render('recipe/bdd.html.twig', [
-            'controller_name' => 'RecipeController',
-            'recipes' => $recipes,
-            'tags' => $tags,
-            'kitchenTools' => $kitchenTools,
-            'ingredient' => $ingredients,
-            'reviews' => $reviews,
-            'steps' => $steps,
-            'unit' => $units
-        ]);
-    }
-
     /**
      * @Route("/recipe/{id}",  name="recipe_show")
      */
-    public function show(Recipe $recipe, Comments $comments = null ,Request $request, ObjectManager $manager, UserInterface $user = null)
+    public function show(Recipe $recipe, Comments $comments = null ,Request $request, ObjectManager $manager)
     {
 
         $comments = new Comments();
         
+        $user= $this->getUser();
         
         $form= $this->createForm(CommentsType::class, $comments);    
         $form->handleRequest($request);
@@ -255,7 +254,8 @@ class RecipeController extends AbstractController
               $comments->setRecipe($idRecipe);
               //$comments->setPicture('<img src="http://lorempixel.com/400/200" alt="">');
              
-             $comments->setAuthor($user->getUsername())
+             $comments->setUser($user)
+                      ->setAuthor($user->getUsername())
                       ->setEmail($user->getEmail())
                       ->setPicture($user->getPicture());
 
@@ -352,6 +352,20 @@ class RecipeController extends AbstractController
             'comment' => $comment,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("recipe/{id}", name="recipe_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Recipe $recipe): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($recipe);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('recipe_show',['id' => $recipe->getId()]);
     }
 
     
